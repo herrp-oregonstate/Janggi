@@ -71,12 +71,12 @@ class JangiGame:
         self._game_board = [
             ["RChariot", "RElephant", "RHorse", "RGuard", None, "RGuard", "RElephant", "RHorse", "RChariot"],
             [None, None, None, None, "RGeneral", None, None, None, None],
+            [None, "RCannon", None, None, None, None, None, "RCannon", None],
             ["RSoldier", None, "RSoldier", None, "RSoldier", None, "RSoldier", None, "RSoldier"],
             [None, None, None, None, None, None, None, None, None],
             [None, None, None, None, None, None, None, None, None],
-            [None, None, None, None, None, None, None, None, None],
-            [None, None, None, None, None, None, None, None, None],
             ["BSoldier", None, "BSoldier", None, "BSoldier", None, "BSoldier", None, "BSoldier"],
+            [None, "BCannon", None, None, None, None, None, "BCannon", None],
             [None, None, None, None, "BGeneral", None, None, None, None],
             ["BChariot", "BElephant", "BHorse", "BGuard", None, "BGuard", "BElephant", "BHorse", "BChariot"],
 
@@ -89,11 +89,11 @@ class JangiGame:
             "a2": None, "b2": None, "c2": None, "d2": None, "e2": "RGeneral",
             "f2": None, "g2": None, "h2": None, "i2": None,
 
-            "a3": "RSoldier", "b3": None, "c3": "RSoldier", "d3": None, "e3": "RSoldier",
-            "f3": None, "g3": "RSoldier", "h3": None, "i3": "RSoldier",
+            "a3": None, "b3": "RCannon", "c3": None, "d3": None, "e3": None,
+            "f3": None, "g3": None, "h3": "RCannon", "i3": None,
 
-            "a4": None, "b4": None, "c4": None, "d4": None, "e4": None,
-            "f4": None, "g4": None, "h4": None, "i4": None,
+            "a4": "RSoldier", "b4": None, "c4": "RSoldier", "d4": None, "e4": "RSoldier",
+            "f4": None, "g4": "RSoldier", "h4": None, "i4": "RSoldier",
 
             "a5": None, "b5": None, "c5": None, "d5": None, "e5": None,
             "f5": None, "g5": None, "h5": None, "i5": None,
@@ -101,11 +101,11 @@ class JangiGame:
             "a6": None, "b6": None, "c6": None, "d6": None, "e6": None,
             "f6": None, "g6": None, "h6": None, "i6": None,
 
-            "a7": None, "b7": None, "c7": None, "d7": None, "e7": None,
-            "f7": None, "g7": None, "h7": None, "i7": None,
+            "a7": "BSoldier", "b7": None, "c7": "BSoldier", "d7": None, "e7": "BSoldier",
+            "f7": None, "g7": "BSoldier", "h7": None, "i7": "BSoldier",
 
-            "a8": "BSoldier", "b8": None, "c8": "BSoldier", "d8": None, "e8": "BSoldier",
-            "f8": None, "g8": "BSoldier", "h8": None, "i8": "BSoldier",
+            "a8": None, "b8": "BCannon", "c8": None, "d8": None, "e8": None,
+            "f8": None, "g8": None, "h8": "BCannon", "i8": None,
 
             "a9": None, "b9": None, "c9": None, "d9": None, "e9": "BGeneral",
             "f9": None, "g9": None, "h9": None, "i9": None,
