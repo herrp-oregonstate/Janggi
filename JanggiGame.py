@@ -12,6 +12,10 @@ class JangiGame:
         """
 
         """
+
+        self._game_state = "UNFINISHED"
+        self._blues_turn = True
+
         self._game_board = [
             ["RChariot", "RElephant", "RHorse", "RGuard", None, "RGuard", "RElephant", "RHorse", "RChariot"],
             [None, None, None, None, "RGeneral", None, None, None, None],
@@ -25,39 +29,46 @@ class JangiGame:
             ["BChariot", "BElephant", "BHorse", "BGuard", None, "BGuard", "BElephant", "BHorse", "BChariot"],
 
         ]
-
-        self._game_board2 = {
-            "a1": "RChariot", "b1": "RElephant", "c1": "RHorse", "d1": "RGuard", "e1": None,
-            "f1": "RGuard", "g1": "RElephant", "h1": "RHorse", "i1": "RChariot",
-
-            "a2": None, "b2": None, "c2": None, "d2": None, "e2": "RGeneral",
-            "f2": None, "g2": None, "h2": None, "i2": None,
-
-            "a3": None, "b3": "RCannon", "c3": None, "d3": None, "e3": None,
-            "f3": None, "g3": None, "h3": "RCannon", "i3": None,
-
-            "a4": "RSoldier", "b4": None, "c4": "RSoldier", "d4": None, "e4": "RSoldier",
-            "f4": None, "g4": "RSoldier", "h4": None, "i4": "RSoldier",
-
-            "a5": None, "b5": None, "c5": None, "d5": None, "e5": None,
-            "f5": None, "g5": None, "h5": None, "i5": None,
-
-            "a6": None, "b6": None, "c6": None, "d6": None, "e6": None,
-            "f6": None, "g6": None, "h6": None, "i6": None,
-
-            "a7": "BSoldier", "b7": None, "c7": "BSoldier", "d7": None, "e7": "BSoldier",
-            "f7": None, "g7": "BSoldier", "h7": None, "i7": "BSoldier",
-
-            "a8": None, "b8": "BCannon", "c8": None, "d8": None, "e8": None,
-            "f8": None, "g8": None, "h8": "BCannon", "i8": None,
-
-            "a9": None, "b9": None, "c9": None, "d9": None, "e9": "BGeneral",
-            "f9": None, "g9": None, "h9": None, "i9": None,
-
-            "a10": "BChariot", "b10": "BElephant", "c10": "BHorse", "d10": "BGuard", "e10": None,
-            "f10": "BGuard", "g10": "BElephant", "h10": "BHorse", "i10": "BChariot"
-        }
+        #
+        # self._game_board2 = {
+        #     "a1": "RChariot", "b1": "RElephant", "c1": "RHorse", "d1": "RGuard", "e1": None,
+        #     "f1": "RGuard", "g1": "RElephant", "h1": "RHorse", "i1": "RChariot",
+        #
+        #     "a2": None, "b2": None, "c2": None, "d2": None, "e2": "RGeneral",
+        #     "f2": None, "g2": None, "h2": None, "i2": None,
+        #
+        #     "a3": None, "b3": "RCannon", "c3": None, "d3": None, "e3": None,
+        #     "f3": None, "g3": None, "h3": "RCannon", "i3": None,
+        #
+        #     "a4": "RSoldier", "b4": None, "c4": "RSoldier", "d4": None, "e4": "RSoldier",
+        #     "f4": None, "g4": "RSoldier", "h4": None, "i4": "RSoldier",
+        #
+        #     "a5": None, "b5": None, "c5": None, "d5": None, "e5": None,
+        #     "f5": None, "g5": None, "h5": None, "i5": None,
+        #
+        #     "a6": None, "b6": None, "c6": None, "d6": None, "e6": None,
+        #     "f6": None, "g6": None, "h6": None, "i6": None,
+        #
+        #     "a7": "BSoldier", "b7": None, "c7": "BSoldier", "d7": None, "e7": "BSoldier",
+        #     "f7": None, "g7": "BSoldier", "h7": None, "i7": "BSoldier",
+        #
+        #     "a8": None, "b8": "BCannon", "c8": None, "d8": None, "e8": None,
+        #     "f8": None, "g8": None, "h8": "BCannon", "i8": None,
+        #
+        #     "a9": None, "b9": None, "c9": None, "d9": None, "e9": "BGeneral",
+        #     "f9": None, "g9": None, "h9": None, "i9": None,
+        #
+        #     "a10": "BChariot", "b10": "BElephant", "c10": "BHorse", "d10": "BGuard", "e10": None,
+        #     "f10": "BGuard", "g10": "BElephant", "h10": "BHorse", "i10": "BChariot"
+        # }
         pass
+
+    def get_game_board(self):
+        """
+
+        :return:
+        """
+        return self._game_board
 
     def get_game_state(self):
         """
@@ -103,6 +114,50 @@ class JangiGame:
         """
 
         pass
+
+    def valid_moves(self, piece):
+        """
+
+        :param piece:
+        :return:
+        """
+
+        pass
+
+
+class JangiPiece:
+    """
+    A Jangi piece belonging a player and it has position on the board.
+    """
+
+    def __init__(self, player, position):
+        """
+        Creates a Jangi piece belonging to a player's color and initialize its position on the board.
+        """
+
+        self._player = player
+        self._position = position
+
+    def get_player(self):
+        """
+        Return the player who owns this piece.
+        """
+
+        return self._player
+
+    def get_position(self):
+        """
+        Returns the position of the piece.
+        """
+
+        return self._position
+
+    def set_position(self, position):
+        """
+        Sets the position of the piece to a new location.
+        """
+
+        self._position = position
 
     def alphabetic_to_index(self, algebraic_notation):
         """
@@ -170,50 +225,6 @@ class JangiGame:
 
         return self.index_to_alphabetic(x_index) + self.index_to_numeric(y_index)
 
-    def valid_moves(self, piece):
-        """
-
-        :param piece:
-        :return:
-        """
-
-        pass
-
-
-class JangiPiece(JangiGame):
-    """
-    A Jangi piece belonging a player and it has position on the board.
-    """
-
-    def __init__(self, player, position):
-        """
-        Creates a Jangi piece belonging to a player's color and initialize its position on the board.
-        """
-
-        self._player = player
-        self._position = position
-
-    def get_player(self):
-        """
-        Return the player who owns this piece.
-        """
-
-        return self._player
-
-    def get_position(self):
-        """
-        Returns the position of the piece.
-        """
-
-        return self._position
-
-    def set_position(self, position):
-        """
-        Sets the position of the piece to a new location.
-        """
-
-        self._position = position
-
 
 class Soldier(JangiPiece):
     """
@@ -227,33 +238,33 @@ class Soldier(JangiPiece):
 
         super().__init__(player, position)
 
-    def possible_movements(self):
+    def valid_movements(self, game_board=None):
         """
-        Returns a set of possible movements for the soldier piece.
+        Returns a set of possible movements for the piece.
         """
 
-        possible_movements_set = set()
-        x_axis = self.alphabetic_to_index(self.get_position())
-        y_axis = self.numeric_to_index(self.get_position())
+        valid_movements_set = set()
+        column = self.alphabetic_to_index(self.get_position())
+        row = self.numeric_to_index(self.get_position())
 
         # Both players are able to move left or right, unless they are at the edge of the board.
-        if x_axis != 0 and x_axis != 8:
-            possible_movements_set.add(self.indices_to_algebraic_notation(x_axis + 1, y_axis))
-            possible_movements_set.add(self.indices_to_algebraic_notation(x_axis - 1, y_axis))
-        elif x_axis == 0:
-            possible_movements_set.add(self.indices_to_algebraic_notation(x_axis + 1, y_axis))
+        if column != 0 and column != 8:
+            valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+            valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+        elif column == 0:
+            valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
         else:
-            possible_movements_set.add(self.indices_to_algebraic_notation(x_axis - 1, y_axis))
+            valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
 
         # Red can only move to a higher index (down the board), while blue can only move to a lower index (up the board)
         if self.get_player() == "red":
-            if y_axis != 9:
-                possible_movements_set.add(self.indices_to_algebraic_notation(x_axis, y_axis + 1))
+            if row != 9:
+                valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
         else:
-            if y_axis != 0:
-                possible_movements_set.add(self.indices_to_algebraic_notation(x_axis, y_axis - 1))
+            if row != 0:
+                valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
 
-        return possible_movements_set
+        return valid_movements_set
 
     pass
 
@@ -271,53 +282,53 @@ class Guard(JangiPiece):
 
         super().__init__(player, position)
 
-    def possible_movements(self):
+    def valid_movements(self, game_board=None):
         """
-        Returns a set of possible movements for the soldier piece.
+        Returns a set of possible movements for the piece.
         """
-        possible_movements_set = set()
-        x_axis = self.alphabetic_to_index(self.get_position())
-        y_axis = self.numeric_to_index(self.get_position())
+        valid_movements_set = set()
+        column = self.alphabetic_to_index(self.get_position())
+        row = self.numeric_to_index(self.get_position())
 
         if self.get_player() == "red":
 
             # Allows horizontal movement within the red palace only.
-            if x_axis != 3 and x_axis != 5:
-                possible_movements_set.add(self.indices_to_algebraic_notation(x_axis + 1, y_axis))
-                possible_movements_set.add(self.indices_to_algebraic_notation(x_axis - 1, y_axis))
-            elif x_axis == 3:
-                possible_movements_set.add(self.indices_to_algebraic_notation(x_axis + 1, y_axis))
-            elif x_axis == 5:
-                possible_movements_set.add(self.indices_to_algebraic_notation(x_axis - 1, y_axis))
+            if column != 3 and column != 5:
+                valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+                valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+            elif column == 3:
+                valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+            elif column == 5:
+                valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
 
             # Allows vertical movement within the red palace only.
-            if y_axis != 0 or y_axis != 2:
-                possible_movements_set.add(self.indices_to_algebraic_notation(x_axis, y_axis + 1))
-                possible_movements_set.add(self.indices_to_algebraic_notation(x_axis, y_axis - 1))
-            elif y_axis == 0:
-                possible_movements_set.add(self.indices_to_algebraic_notation(x_axis, y_axis + 1))
-            elif y_axis == 2:
-                possible_movements_set.add(self.indices_to_algebraic_notation(x_axis, y_axis - 1))
+            if row != 0 or row != 2:
+                valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+                valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+            elif row == 0:
+                valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+            elif row == 2:
+                valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
 
         else:
 
             # Allows horizontal movement within the blue palace only.
-            if x_axis != 3 and x_axis != 5:
-                possible_movements_set.add(self.indices_to_algebraic_notation(x_axis + 1, y_axis))
-                possible_movements_set.add(self.indices_to_algebraic_notation(x_axis - 1, y_axis))
-            elif x_axis == 3:
-                possible_movements_set.add(self.indices_to_algebraic_notation(x_axis + 1, y_axis))
-            elif x_axis == 5:
-                possible_movements_set.add(self.indices_to_algebraic_notation(x_axis - 1, y_axis))
+            if column != 3 and column != 5:
+                valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+                valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+            elif column == 3:
+                valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+            elif column == 5:
+                valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
 
             # Allows vertical movement within the blue palace only.
-            if y_axis != 7 or y_axis != 9:
-                possible_movements_set.add(self.indices_to_algebraic_notation(x_axis, y_axis + 1))
-                possible_movements_set.add(self.indices_to_algebraic_notation(x_axis, y_axis - 1))
-            elif y_axis == 9:
-                possible_movements_set.add(self.indices_to_algebraic_notation(x_axis, y_axis + 1))
-            elif y_axis == 7:
-                possible_movements_set.add(self.indices_to_algebraic_notation(x_axis, y_axis - 1))
+            if row != 7 or row != 9:
+                valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+                valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+            elif row == 9:
+                valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+            elif row == 7:
+                valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
 
     pass
 
@@ -338,7 +349,7 @@ class General(Guard):
     pass
 
 
-class Horse:
+class Horse(JangiPiece):
     """
 
     """
@@ -349,6 +360,99 @@ class Horse:
         """
 
         super().__init__(player, position)
+
+    def valid_movements(self, game_board=None):
+        """
+        Returns a set of possible movements for the piece.
+        """
+        valid_movements_set = set()
+        column = self.alphabetic_to_index(self.get_position())
+        row = self.numeric_to_index(self.get_position())
+
+        # First scenario: moving to to a higher index of the rows (down the board).
+        # Make sure we aren't at bottom edge and that the space below the piece is unoccupied.
+        if row + 2 <= 9 and game_board[row + 1][column] is None:
+
+            # Checks for the left and right edges.
+            # Also makes sure the space the piece moves into is unoccupied by the current player's pieces.
+            if 0 < column < 8:
+                if game_board[row + 2][column + 1].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row + 2))
+
+                if game_board[row + 2][column - 1].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row + 2))
+
+            elif column == 0:
+                if game_board[row + 2][column + 1].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row + 2))
+
+            elif column == 8:
+                if game_board[row + 2][column - 1].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row + 2))
+
+        # Second scenario: moving to to a lower index of the rows (up the board).
+        # Make sure we aren't at top edge and that the space above the piece is unoccupied.
+        if row - 2 >= 0 and game_board[row - 1][column] is None:
+
+            # Checks for the left and right edges.
+            # Also makes sure the space the piece moves into is unoccupied by the current player's pieces.
+            if 0 < column < 8:
+                if game_board[row - 2][column + 1].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row - 2))
+
+                if game_board[row - 2][column - 1].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 2))
+
+            elif column == 0:
+                if game_board[row + 2][column + 1].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row - 2))
+
+            elif column == 9:
+                if game_board[row + 2][column - 1].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 2))
+
+        # Third scenario: moving to a higher index of the columns (to the right).
+        # Make sure we aren't at the right edge and the space to the right of the piece is unoccupied.
+        if column + 2 <= 8 and game_board[row][column + 1] is None:
+
+            # Check for top and bottom edges.
+            # Also makes sure the space the piece moves into is unoccupied by the current player's pieces.
+            if 0 < row < 9:
+                if game_board[row + 1][column + 2].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 2, row + 1))
+
+                if game_board[row - 1][column + 2].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 2, row - 1))
+
+            elif row == 0:
+                if game_board[row + 1][column + 2].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 2, row + 1))
+
+            elif row == 9:
+                if game_board[row - 1][column + 2].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 2, row - 1))
+
+        # Fourth scenario: moving to a lower index of the columns (to the left).
+        # Make sure we aren't at the left edge and the space to the left of the piece is unoccupied.
+        if column - 2 >= 0 and game_board[row][column - 1] is None:
+
+            # Check for top and bottom edges.
+            # Also makes sure the space the piece moves into is unoccupied by the current player's pieces.
+            if 0 < row < 9:
+                if game_board[row + 1][column - 2].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 2, row + 1))
+
+                if game_board[row - 1][column - 2].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 2, row - 1))
+
+            elif row == 0:
+                if game_board[row + 1][column - 2].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 2, row + 1))
+
+            elif row == 9:
+                if game_board[row - 1][column - 2].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 2, row - 1))
+
 
     pass
 
@@ -366,10 +470,16 @@ class Elephant(Horse):
 
         super().__init__(player, position)
 
+    def possible_movements(self, game_board=None):
+        """
+        Returns a set of possible movements for the piece.
+        """
+        super().valid_movements(game_board)
+
     pass
 
 
-class Chariot:
+class Chariot(JangiGame):
     """
 
     """
@@ -380,6 +490,15 @@ class Chariot:
         """
 
         super().__init__(player, position)
+
+
+    def valid_movements(self, game_board=None):
+        """
+        Returns a set of possible movements for the piece.
+        """
+        valid_movements_set = set()
+        column = self.alphabetic_to_index(self.get_position())
+        row = self.numeric_to_index(self.get_position())
 
     pass
 
@@ -395,5 +514,14 @@ class Cannon(Chariot):
         """
 
         super().__init__(player, position)
+
+
+    def valid_movements(self, game_board=None):
+        """
+        Returns a set of possible movements for the piece.
+        """
+        valid_movements_set = set()
+        column = self.alphabetic_to_index(self.get_position())
+        row = self.numeric_to_index(self.get_position())
 
     pass
