@@ -1,32 +1,92 @@
 # Author: Paul Herr
 # Date: 3/1/21
 # Description:
+#     A two player korean board game similar to chess. Players are either blue or red. Blue always goes first. The board
+#     is 9x10. There is a 3x3 area called the palace at the edge of each player's side. There are 7 types of pieces:
+#
+#     1 general that can only move one space vertically or horizontally within the palace.
+#
+#     2 guards that can only move one space vertically or horizontally. within the palace.
+#
+#     2 horses that can move one space vertically or horizontally and then one space diagonally forwards.
+#     This piece cannot jump over other pieces. It cannot move in a direction if there is a piece blocking it
+#
+#     2 elephants that can move one space vertically or horizontally and then two spaces diagonally forwards.
+#     This piece cannot jump over other pieces. It cannot move in a direction if there is a piece blocking it
+#
+#     2 chariots that can move an the length of the board vertically or horizontally. The chariot can also move along
+#     the diagonal lines when in the palace.
+#
+#     2 cannons that can only move vertically or horizontally if there is a piece in the same row/column that it can
+#     jump over. It can move any distance provided the previous requirement is met. It cannot capture other cannon
+#     pieces. It cannot jump over two pieces. The cannon can also move along the diagonal lines when in the palace.
+#
+#     5 soldiers that can move one space forward or one space horizontally. It cannot go backwards.
+#
+#     Each player has a set of these pieces.
+#
+#     The player must checkmate the opposing general in order to win.
 
 
 class JangiGame:
     """
+    A two player korean board game similar to chess. Players are either blue or red. Blue always goes first. The board
+    is 9x10. There is a 3x3 area called the palace at the edge of each player's side. There are 7 types of pieces:
 
+    1 general that can only move one space vertically or horizontally within the palace.
+
+    2 guards that can only move one space vertically or horizontally. within the palace.
+
+    2 horses that can move one space vertically or horizontally and then one space diagonally forwards.
+    This piece cannot jump over other pieces. It cannot move in a direction if there is a piece blocking it
+
+    2 elephants that can move one space vertically or horizontally and then two spaces diagonally forwards.
+    This piece cannot jump over other pieces. It cannot move in a direction if there is a piece blocking it
+
+    2 chariots that can move an the length of the board vertically or horizontally. The chariot can also move along
+    the diagonal lines when in the palace.
+
+    2 cannons that can only move vertically or horizontally if there is a piece in the same row/column that it can
+    jump over. It can move any distance provided the previous requirement is met. It cannot capture other cannon pieces.
+    It cannot jump over two pieces. The cannon can also move along the diagonal lines when in the palace.
+
+    5 soldiers that can move one space forward or one space horizontally. It cannot go backwards.
+
+    Each player has a set of these pieces.
+
+    The player must checkmate the opposing general in order to win.
     """
 
     def __init__(self):
         """
-
+        Sets up the beginning of the game. Initializes the game state to unfinished. Set it to be the blue player's
+        turn. Lastly, initializes the board and pieces to their beginning positions.
         """
 
         self._game_state = "UNFINISHED"
         self._blues_turn = True
 
         self._game_board = [
-            ["RChariot", "RElephant", "RHorse", "RGuard", None, "RGuard", "RElephant", "RHorse", "RChariot"],
-            [None, None, None, None, "RGeneral", None, None, None, None],
-            [None, "RCannon", None, None, None, None, None, "RCannon", None],
-            ["RSoldier", None, "RSoldier", None, "RSoldier", None, "RSoldier", None, "RSoldier"],
-            [None, None, None, None, None, None, None, None, None],
-            [None, None, None, None, None, None, None, None, None],
-            ["BSoldier", None, "BSoldier", None, "BSoldier", None, "BSoldier", None, "BSoldier"],
-            [None, "BCannon", None, None, None, None, None, "BCannon", None],
-            [None, None, None, None, "BGeneral", None, None, None, None],
-            ["BChariot", "BElephant", "BHorse", "BGuard", None, "BGuard", "BElephant", "BHorse", "BChariot"],
+            [Chariot("red", "a1"), Elephant("red", "b1"), Horse("red", "c1"), "RGuard", None,
+             "RGuard", Elephant("red", "g1"), Horse("red", "h1"), Chariot("red", "i1")],
+            [None, None, None, None, General("red", "e2"),
+             None, None, None, None],
+            [None, Cannon("red", "b3"), None, None, None,
+             None, None, Cannon("red", "h3"), None],
+            [Soldier("red", "a4"), None, Soldier("red", "c4"), None, Soldier("red", "e4"),
+             None, Soldier("red", "g4"), None, Soldier("red", "i4")],
+            [None, None, None, None, None,
+             None, None, None, None],
+            [None, None, None, None, None,
+             None, None, None, None],
+            [Soldier("blue", "a7"), None, Soldier("blue", "c7"), None, Soldier("blue", "e7"),
+             None, Soldier("blue", "g7"), None, Soldier("blue", "i7")],
+            [None, Cannon("blue", "b8"), None, None, None,
+             None, None, Cannon("blue", "h8"), None],
+            [None, None, None, None, General("blue", "e9"),
+             None, None, None, None],
+            [Chariot("blue", "a10"), Elephant("blue", "b10"), Horse("blue", "c10"), "BGuard", None,
+             "BGuard", Elephant("blue", "g10"), Horse("blue", "i10"), Chariot("blue", "i10")],
 
         ]
         #
@@ -65,67 +125,35 @@ class JangiGame:
 
     def get_game_board(self):
         """
-
-        :return:
+        Returns the game board.
         """
+
         return self._game_board
 
     def get_game_state(self):
         """
-
-        :return:
+        Returns the game state.
         """
 
-        pass
+        return self._game_state
 
-    def make_move(self, piece_location, move_location):
+    def make_move(self, piece_location, new_location):
         """
-
-        :param piece_location:
-        :param move_location:
-        :return:
+        Attempts to move the piece specified to a new location on the board. Returns True if the move is successful.
+        Returns False if the move is unsuccessful or if the game is finished.
         """
 
         pass
 
     def is_in_check(self, player_color):
         """
-
-        :param player_color:
-        :return:
-        """
-
-        pass
-
-    def get_location(self, piece):
-        """
-
-        :param piece:
-        :return:
-        """
-
-        pass
-
-    def space_is_empty(self, location):
-        """
-
-        :param location:
-        :return:
-        """
-
-        pass
-
-    def valid_moves(self, piece):
-        """
-
-        :param piece:
-        :return:
+        Returns True if the player's general is in check.
         """
 
         pass
 
 
-class JangiPiece:
+class JanggiPiece:
     """
     A Jangi piece belonging a player and it has position on the board.
     """
@@ -226,9 +254,9 @@ class JangiPiece:
         return self.index_to_alphabetic(x_index) + self.index_to_numeric(y_index)
 
 
-class Soldier(JangiPiece):
+class Soldier(JanggiPiece):
     """
-    A soldier piece that can move forward one space or move to the left or right one space. It cannot go backwards.
+    A soldier piece that can move one space forward or one space horizontally. It cannot go backwards.
     """
 
     def __init__(self, player, position):
@@ -237,10 +265,11 @@ class Soldier(JangiPiece):
         """
 
         super().__init__(player, position)
+        self._piece_name = "soldier"
 
     def valid_movements(self, game_board=None):
         """
-        Returns a set of possible movements for the piece.
+        Returns a set of valid movements for the piece.
         """
 
         valid_movements_set = set()
@@ -269,22 +298,22 @@ class Soldier(JangiPiece):
     pass
 
 
-class Guard(JangiPiece):
+class Guard(JanggiPiece):
     """
-    A guard piece that can move forward one space, backwards one space, or left or right one space. It is only able to
-    move within the palace.
+    A guard piece that can move one space vertically or horizontally. It is only able to move within the palace.
     """
 
     def __init__(self, player, position):
         """
-        Initializes a guard piece to belong to a player and sets its position on the board.:
+        Initializes a guard piece to belong to a player and sets its position on the board.
         """
 
         super().__init__(player, position)
+        self._piece_name = "guard"
 
     def valid_movements(self, game_board=None):
         """
-        Returns a set of possible movements for the piece.
+        Returns a set of valid movements for the piece.
         """
         valid_movements_set = set()
         column = self.alphabetic_to_index(self.get_position())
@@ -330,13 +359,13 @@ class Guard(JangiPiece):
             elif row == 7:
                 valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
 
-    pass
+        return valid_movements_set
 
 
 class General(Guard):
     """
-    A general piece that can move forward one space, backwards one space, or left or right one space. It is only able to
-    move within the palace. The player loses if his general is checkmated.
+    A general piece that can move one space vertically or horizontally. It is only able to move within the palace.
+    The player loses if his general is checkmated.
     """
 
     def __init__(self, player, position):
@@ -345,13 +374,15 @@ class General(Guard):
         """
 
         super().__init__(player, position)
+        self._piece_name = "general"
 
     pass
 
 
-class Horse(JangiPiece):
+class Horse(JanggiPiece):
     """
-
+    A horse piece that can move one space vertically or horizontally and then one space diagonally forwards.
+    This piece cannot jump over other pieces. It cannot move in a direction if there is a piece blocking it.
     """
 
     def __init__(self, player, position):
@@ -360,10 +391,11 @@ class Horse(JangiPiece):
         """
 
         super().__init__(player, position)
+        self._piece_name = "horse"
 
     def valid_movements(self, game_board=None):
         """
-        Returns a set of possible movements for the piece.
+        Returns a set of valid movements for the piece.
         """
         valid_movements_set = set()
         column = self.alphabetic_to_index(self.get_position())
@@ -453,35 +485,38 @@ class Horse(JangiPiece):
                 if game_board[row - 1][column - 2].get_player() != self.get_player():
                     valid_movements_set.add(self.indices_to_algebraic_notation(column - 2, row - 1))
 
-
-    pass
+        return valid_movements_set
 
 
 class Elephant(Horse):
     """
-
+    An elephant piece that can move one space vertically or horizontally and then two spaces diagonally forward.
+    This piece cannot jump over other pieces. It cannot move in a direction if there is a piece blocking it.
     """
 
     def __init__(self, player, position):
         """
         Initializes an elephant piece to belong to a player and sets its position on the board.
-:
         """
 
         super().__init__(player, position)
+        self._piece_name = "elephant"
 
-    def possible_movements(self, game_board=None):
+    def valid_movements(self, game_board=None):
         """
-        Returns a set of possible movements for the piece.
+        Returns a set of valid movements for the piece.
         """
-        super().valid_movements(game_board)
+        horse_movements_set = super().valid_movements(game_board)
 
-    pass
+        for position in horse_movements_set:
+            if position is not None:
+                horse_movements_set.remove(position)
 
 
 class Chariot(JangiGame):
     """
-
+    A chariot piece that can move an the length of the board vertically or horizontally. The chariot can also move along
+    the diagonal lines when in the palace.
     """
 
     def __init__(self, player, position):
@@ -490,11 +525,11 @@ class Chariot(JangiGame):
         """
 
         super().__init__(player, position)
-
+        self._piece_name = "chariot"
 
     def valid_movements(self, game_board=None):
         """
-        Returns a set of possible movements for the piece.
+        Returns a set of valid movements for the piece.
         """
         valid_movements_set = set()
         column = self.alphabetic_to_index(self.get_position())
@@ -505,7 +540,9 @@ class Chariot(JangiGame):
 
 class Cannon(Chariot):
     """
-
+    A cannon piece that can only move vertically or horizontally if there is a piece in the same row/column that it can
+    jump over. It can move any distance provided the previous requirement is met. It cannot capture other cannon pieces.
+    It cannot jump over two pieces. The cannon can also move along the diagonal lines when in the palace.
     """
 
     def __init__(self, player, position):
@@ -514,11 +551,11 @@ class Cannon(Chariot):
         """
 
         super().__init__(player, position)
-
+        self._piece_name = "cannon"
 
     def valid_movements(self, game_board=None):
         """
-        Returns a set of possible movements for the piece.
+        Returns a set of valid movements for the piece.
         """
         valid_movements_set = set()
         column = self.alphabetic_to_index(self.get_position())
