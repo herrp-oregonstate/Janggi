@@ -6,7 +6,7 @@
 #
 #     1 general that can only move one space vertically or horizontally within the palace.
 #
-#     2 guards that can only move one space vertically or horizontally. within the palace.
+#     2 guards that can only move one space vertically or horizontally within the palace.
 #
 #     2 horses that can move one space vertically or horizontally and then one space diagonally forwards.
 #     This piece cannot jump over other pieces. It cannot move in a direction if there is a piece blocking it
@@ -35,7 +35,7 @@ class JangiGame:
 
     1 general that can only move one space vertically or horizontally within the palace.
 
-    2 guards that can only move one space vertically or horizontally. within the palace.
+    2 guards that can only move one space vertically or horizontally within the palace.
 
     2 horses that can move one space vertically or horizontally and then one space diagonally forwards.
     This piece cannot jump over other pieces. It cannot move in a direction if there is a piece blocking it
@@ -67,61 +67,88 @@ class JangiGame:
         self._blues_turn = True
 
         self._game_board = [
-            [Chariot("red", "a1"), Elephant("red", "b1"), Horse("red", "c1"), "RGuard", None,
-             "RGuard", Elephant("red", "g1"), Horse("red", "h1"), Chariot("red", "i1")],
-            [None, None, None, None, General("red", "e2"),
-             None, None, None, None],
-            [None, Cannon("red", "b3"), None, None, None,
-             None, None, Cannon("red", "h3"), None],
-            [Soldier("red", "a4"), None, Soldier("red", "c4"), None, Soldier("red", "e4"),
-             None, Soldier("red", "g4"), None, Soldier("red", "i4")],
-            [None, None, None, None, None,
-             None, None, None, None],
-            [None, None, None, None, None,
-             None, None, None, None],
-            [Soldier("blue", "a7"), None, Soldier("blue", "c7"), None, Soldier("blue", "e7"),
-             None, Soldier("blue", "g7"), None, Soldier("blue", "i7")],
-            [None, Cannon("blue", "b8"), None, None, None,
-             None, None, Cannon("blue", "h8"), None],
-            [None, None, None, None, General("blue", "e9"),
-             None, None, None, None],
-            [Chariot("blue", "a10"), Elephant("blue", "b10"), Horse("blue", "c10"), "BGuard", None,
-             "BGuard", Elephant("blue", "g10"), Horse("blue", "i10"), Chariot("blue", "i10")],
+            [Chariot("red", "a1"), Elephant("red", "b1"), Horse("red", "c1"),
+             Guard("red", "d1"), None, Guard("red", "f1"),
+             Elephant("red", "g1"), Horse("red", "h1"), Chariot("red", "i1")],
 
+            [None, None, None,
+             None, General("red", "e2"), None,
+             None, None, None],
+
+            [None, Cannon("red", "b3"), None,
+             None, None, None,
+             None, Cannon("red", "h3"), None],
+
+            [Soldier("red", "a4"), None, Soldier("red", "c4"),
+             None, Soldier("red", "e4"), None,
+             Soldier("red", "g4"), None, Soldier("red", "i4")],
+
+            [None, None, None,
+             None, None, None,
+             None, None, None],
+
+            [None, None, None,
+             None, None, None,
+             None, None, None],
+
+            [Soldier("blue", "a7"), None, Soldier("blue", "c7"),
+             None, Soldier("blue", "e7"), None,
+             Soldier("blue", "g7"), None, Soldier("blue", "i7")],
+
+            [None, Cannon("blue", "b8"), None,
+             None, None, None,
+             None, Cannon("blue", "h8"), None],
+
+            [None, None, None,
+             None, General("blue", "e9"), None,
+             None, None, None],
+
+            [Chariot("blue", "a10"), Elephant("blue", "b10"), Horse("blue", "c10"),
+             Guard("blue", "d10"), None, Guard("blue", "f10"),
+             Elephant("blue", "g10"), Horse("blue", "h10"), Chariot("blue", "i10")]
         ]
-        #
-        # self._game_board2 = {
-        #     "a1": "RChariot", "b1": "RElephant", "c1": "RHorse", "d1": "RGuard", "e1": None,
-        #     "f1": "RGuard", "g1": "RElephant", "h1": "RHorse", "i1": "RChariot",
-        #
-        #     "a2": None, "b2": None, "c2": None, "d2": None, "e2": "RGeneral",
-        #     "f2": None, "g2": None, "h2": None, "i2": None,
-        #
-        #     "a3": None, "b3": "RCannon", "c3": None, "d3": None, "e3": None,
-        #     "f3": None, "g3": None, "h3": "RCannon", "i3": None,
-        #
-        #     "a4": "RSoldier", "b4": None, "c4": "RSoldier", "d4": None, "e4": "RSoldier",
-        #     "f4": None, "g4": "RSoldier", "h4": None, "i4": "RSoldier",
-        #
-        #     "a5": None, "b5": None, "c5": None, "d5": None, "e5": None,
-        #     "f5": None, "g5": None, "h5": None, "i5": None,
-        #
-        #     "a6": None, "b6": None, "c6": None, "d6": None, "e6": None,
-        #     "f6": None, "g6": None, "h6": None, "i6": None,
-        #
-        #     "a7": "BSoldier", "b7": None, "c7": "BSoldier", "d7": None, "e7": "BSoldier",
-        #     "f7": None, "g7": "BSoldier", "h7": None, "i7": "BSoldier",
-        #
-        #     "a8": None, "b8": "BCannon", "c8": None, "d8": None, "e8": None,
-        #     "f8": None, "g8": None, "h8": "BCannon", "i8": None,
-        #
-        #     "a9": None, "b9": None, "c9": None, "d9": None, "e9": "BGeneral",
-        #     "f9": None, "g9": None, "h9": None, "i9": None,
-        #
-        #     "a10": "BChariot", "b10": "BElephant", "c10": "BHorse", "d10": "BGuard", "e10": None,
-        #     "f10": "BGuard", "g10": "BElephant", "h10": "BHorse", "i10": "BChariot"
-        # }
-        pass
+
+        self._dict_game_board = {
+            "a1": Chariot("red", "a1"), "b1": Elephant("red", "b1"), "c1": Horse("red", "c1"),
+            "d1": Guard("red", "d1"), "e1": None, "f1": Guard("red", "f1"),
+            "g1": Elephant("red", "g1"), "h1": Horse("red", "h1"), "i1": Chariot("red", "i1"),
+
+            "a2": None, "b2": None, "c2": None,
+            "d2": None, "e2": General("red", "e2"), "f2": None,
+            "g2": None, "h2": None, "i2": None,
+
+            "a3": None, "b3": Cannon("red", "b3"), "c3": None,
+            "d3": None, "e3": None, "f3": None,
+            "g3": None, "h3": Cannon("red", "h3"), "i3": None,
+
+            "a4": Soldier("red", "a4"), "b4": None, "c4": Soldier("red", "c4"),
+            "d4": None, "e4": Soldier("red", "e4"), "f4": None,
+            "g4": Soldier("red", "g4"), "h4": None, "i4": Soldier("red", "i4"),
+
+            "a5": None, "b5": None, "c5": None,
+            "d5": None, "e5": None, "f5": None,
+            "g5": None, "h5": None, "i5": None,
+
+            "a6": None, "b6": None, "c6": None,
+            "d6": None, "e6": None, "f6": None,
+            "g6": None, "h6": None, "i6": None,
+
+            "a7": Soldier("blue", "a7"), "b7": None, "c7": Soldier("blue", "c7"),
+            "d7": None, "e7": Soldier("blue", "e7"), "f7": None,
+            "g7": Soldier("blue", "g7"), "h7": None, "i7": Soldier("blue", "i7"),
+
+            "a8": None, "b8": Cannon("blue", "b8"), "c8": None,
+            "d8": None, "e8": None, "f8": None,
+            "g8": None, "h8": Cannon("blue", "h8"), "i8": None,
+
+            "a9": None, "b9": None, "c9": None,
+            "d9": None, "e9": General("blue", "e9"), "f9": None,
+            "g9": None, "h9": None, "i9": None,
+
+            "a10": Chariot("blue", "a10"), "b10": Elephant("blue", "b10"), "c10": Horse("blue", "c10"),
+            "d10": Guard("blue", "d10"), "e10": None, "f10": Guard("blue", "f10"),
+            "g10": Elephant("blue", "g10"), "h10": Horse("blue", "h10"), "i10": Chariot("blue", "i10")
+        }
 
     def get_game_board(self):
         """
@@ -267,7 +294,7 @@ class Soldier(JanggiPiece):
         super().__init__(player, position)
         self._piece_name = "soldier"
 
-    def valid_movements(self, game_board=None):
+    def valid_movements(self):
         """
         Returns a set of valid movements for the piece.
         """
@@ -295,8 +322,6 @@ class Soldier(JanggiPiece):
 
         return valid_movements_set
 
-    pass
-
 
 class Guard(JanggiPiece):
     """
@@ -311,7 +336,7 @@ class Guard(JanggiPiece):
         super().__init__(player, position)
         self._piece_name = "guard"
 
-    def valid_movements(self, game_board=None):
+    def valid_movements(self):
         """
         Returns a set of valid movements for the piece.
         """
@@ -393,7 +418,7 @@ class Horse(JanggiPiece):
         super().__init__(player, position)
         self._piece_name = "horse"
 
-    def valid_movements(self, game_board=None):
+    def valid_movements(self, game_board):
         """
         Returns a set of valid movements for the piece.
         """
@@ -502,7 +527,7 @@ class Elephant(Horse):
         super().__init__(player, position)
         self._piece_name = "elephant"
 
-    def valid_movements(self, game_board=None):
+    def valid_movements(self, game_board):
         """
         Returns a set of valid movements for the piece.
         """
@@ -511,6 +536,8 @@ class Elephant(Horse):
         for position in horse_movements_set:
             if position is not None:
                 horse_movements_set.remove(position)
+
+
 
 
 class Chariot(JangiGame):
@@ -527,7 +554,7 @@ class Chariot(JangiGame):
         super().__init__(player, position)
         self._piece_name = "chariot"
 
-    def valid_movements(self, game_board=None):
+    def valid_movements(self, game_board):
         """
         Returns a set of valid movements for the piece.
         """
@@ -553,7 +580,7 @@ class Cannon(Chariot):
         super().__init__(player, position)
         self._piece_name = "cannon"
 
-    def valid_movements(self, game_board=None):
+    def valid_movements(self, game_board):
         """
         Returns a set of valid movements for the piece.
         """
