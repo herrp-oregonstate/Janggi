@@ -502,24 +502,55 @@ class Soldier(JanggiPiece):
         column = self.alphabetic_to_index(self.get_position())
         row = self.numeric_to_index(self.get_position())
 
-        ###### Still need to implement case where the location contains the player's piece already.
-
         # Both players are able to move left or right, unless they are at the edge of the board.
         if column != 0 and column != 8:
-            valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
-            valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+
+            # If there's a piece to the left or right, make sure it's not the current player's piece.
+            if game_board[row][column + 1] is not None:
+                if game_board[row][column + 1].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+            else:
+                valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+
+            if game_board[row][column - 1] is not None:
+                if game_board[row][column - 1].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+            else:
+                valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+
         elif column == 0:
-            valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+            if game_board[row][column + 1] is not None:
+                if game_board[row][column + 1].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+            else:
+                valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+
         else:
-            valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+            if game_board[row][column - 1] is not None:
+                if game_board[row][column - 1].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+            else:
+                valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
 
         # Red can only move to a higher index (down the board), while blue can only move to a lower index (up the board)
         if self.get_player() == "red":
             if row != 9:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+
+                if game_board[row + 1][column] is not None:
+                    if game_board[row + 1][column].get_player() != self.get_player():
+                        valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+                else:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+
         else:
             if row != 0:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+
+                if game_board[row - 1][column] is not None:
+                    if game_board[row - 1][column].get_player() != self.get_player():
+                        valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+
+                else:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
 
         return valid_movements_set
 
