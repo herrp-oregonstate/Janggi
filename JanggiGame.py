@@ -548,7 +548,6 @@ class Soldier(JanggiPiece):
                 if game_board[row - 1][column] is not None:
                     if game_board[row - 1][column].get_player() != self.get_player():
                         valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
-
                 else:
                     valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
 
@@ -570,6 +569,85 @@ class Guard(JanggiPiece):
         super().__init__(player, position)
         self._piece_type = "guard"
 
+    def horizontal_movement_check(self, game_board, lower_boundary=0, upper_boundary=8):
+        """
+
+        """
+
+        valid_movements_list = []
+        column = self.alphabetic_to_index(self.get_position())
+        row = self.numeric_to_index(self.get_position())
+
+        # Allows horizontal movement within the boundary only.
+        if column != lower_boundary and column != upper_boundary:
+
+            # Checks for friendly pieces.
+            if game_board[row][column + 1] is not None:
+                if game_board[row][column + 1].get_player() != self.get_player():
+                    valid_movements_list.append(self.indices_to_algebraic_notation(column + 1, row))
+            else:
+                valid_movements_list.append(self.indices_to_algebraic_notation(column + 1, row))
+
+            if game_board[row][column - 1] is not None:
+                if game_board[row][column - 1].get_player() != self.get_player():
+                    valid_movements_list.append(self.indices_to_algebraic_notation(column - 1, row))
+            else:
+                valid_movements_list.append(self.indices_to_algebraic_notation(column - 1, row))
+
+        # At the edges of the left and right of the red palace.
+        elif column == lower_boundary:
+
+            if game_board[row][column + 1] is not None:
+                if game_board[row][column + 1].get_player() != self.get_player():
+                    valid_movements_list.append(self.indices_to_algebraic_notation(column + 1, row))
+            else:
+                valid_movements_list.append(self.indices_to_algebraic_notation(column + 1, row))
+
+        elif column == upper_boundary:
+            if game_board[row][column - 1] is not None:
+                if game_board[row][column - 1].get_player() != self.get_player():
+                    valid_movements_list.append(self.indices_to_algebraic_notation(column - 1, row))
+            else:
+                valid_movements_list.append(self.indices_to_algebraic_notation(column - 1, row))
+
+        return valid_movements_list
+
+    def vertical_movement_check(self, game_board, lower_boundary=0, upper_boundary=9):
+
+        valid_movements_list = []
+        column = self.alphabetic_to_index(self.get_position())
+        row = self.numeric_to_index(self.get_position())
+
+        if row != lower_boundary or row != upper_boundary:
+            if game_board[row + 1][column] is not None:
+                if game_board[row + 1][column].get_player() != self.get_player():
+                    valid_movements_list.append(self.indices_to_algebraic_notation(column, row + 1))
+            else:
+                valid_movements_list.append(self.indices_to_algebraic_notation(column, row + 1))
+
+            if game_board[row - 1][column] is not None:
+                if game_board[row - 1][column].get_player() != self.get_player():
+                    valid_movements_list.append(self.indices_to_algebraic_notation(column, row - 1))
+            else:
+                valid_movements_list.append(self.indices_to_algebraic_notation(column, row - 1))
+
+        # At the edges of the top and bottom of the blue palace.
+        elif row == lower_boundary:
+            if game_board[row + 1][column] is not None:
+                if game_board[row + 1][column].get_player() != self.get_player():
+                    valid_movements_list.append(self.indices_to_algebraic_notation(column, row + 1))
+            else:
+                valid_movements_list.append(self.indices_to_algebraic_notation(column, row + 1))
+
+        elif row == upper_boundary:
+            if game_board[row - 1][column] is not None:
+                if game_board[row - 1][column].get_player() != self.get_player():
+                    valid_movements_list.append(self.indices_to_algebraic_notation(column, row - 1))
+            else:
+                valid_movements_list.append(self.indices_to_algebraic_notation(column, row - 1))
+
+        return valid_movements_list
+
     def valid_movements(self, game_board=None):
         """
         Checks all possible movements and returns a set of only valid movements.
@@ -584,41 +662,123 @@ class Guard(JanggiPiece):
 
             # Allows horizontal movement within the red palace only.
             if column != 3 and column != 5:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
-                valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+
+                # Checks for friendly pieces.
+                if game_board[row][column + 1] is not None:
+                    if game_board[row][column + 1].get_player() != self.get_player():
+                        valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+                else:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+
+                if game_board[row][column - 1] is not None:
+                    if game_board[row][column - 1].get_player() != self.get_player():
+                        valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+                else:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+
+            # At the edges of the left and right of the red palace.
             elif column == 3:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+
+                if game_board[row][column + 1] is not None:
+                    if game_board[row][column + 1].get_player() != self.get_player():
+                        valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+                else:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+
             elif column == 5:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+                if game_board[row][column - 1] is not None:
+                    if game_board[row][column - 1].get_player() != self.get_player():
+                        valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+                else:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
 
             # Allows vertical movement within the red palace only.
             if row != 0 or row != 2:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
-                valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+                if game_board[row + 1][column] is not None:
+                    if game_board[row + 1][column].get_player() != self.get_player():
+                        valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+                else:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+
+                if game_board[row - 1][column] is not None:
+                    if game_board[row - 1][column].get_player() != self.get_player():
+                        valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+                else:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+
+            # At the edges of the top and bottom of the red palace.
             elif row == 0:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+                if game_board[row + 1][column] is not None:
+                    if game_board[row + 1][column].get_player() != self.get_player():
+                        valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+                else:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+
             elif row == 2:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+                if game_board[row - 1][column] is not None:
+                    if game_board[row - 1][column].get_player() != self.get_player():
+                        valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+                else:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
 
         else:
 
             # Allows horizontal movement within the blue palace only.
             if column != 3 and column != 5:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
-                valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+                if game_board[row][column + 1] is not None:
+                    if game_board[row][column + 1].get_player() != self.get_player():
+                        valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+                else:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+
+                if game_board[row][column - 1] is not None:
+                    if game_board[row][column - 1].get_player() != self.get_player():
+                        valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+                else:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+
             elif column == 3:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+                if game_board[row][column + 1] is not None:
+                    if game_board[row][column + 1].get_player() != self.get_player():
+                        valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+                else:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+
             elif column == 5:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+                if game_board[row][column - 1] is not None:
+                    if game_board[row][column - 1].get_player() != self.get_player():
+                        valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+                else:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
 
             # Allows vertical movement within the blue palace only.
             if row != 7 or row != 9:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
-                valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
-            elif row == 9:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+                if game_board[row + 1][column] is not None:
+                    if game_board[row + 1][column].get_player() != self.get_player():
+                        valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+                else:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+
+                if game_board[row - 1][column] is not None:
+                    if game_board[row - 1][column].get_player() != self.get_player():
+                        valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+                else:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+
+            # At the edges of the top and bottom of the blue palace.
             elif row == 7:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+                if game_board[row + 1][column] is not None:
+                    if game_board[row + 1][column].get_player() != self.get_player():
+                        valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+                else:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+
+            elif row == 9:
+                if game_board[row - 1][column] is not None:
+                    if game_board[row - 1][column].get_player() != self.get_player():
+                        valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+                else:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
 
         return valid_movements_set
 
