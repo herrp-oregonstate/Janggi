@@ -477,7 +477,7 @@ class JanggiPiece:
 
         return self.index_to_alphabetic(columns) + self.index_to_numeric(rows)
 
-    def _horizontal_movement_check(self, game_board, lower_boundary=0, upper_boundary=8):
+    def horizontal_movement_check(self, game_board, lower_boundary=0, upper_boundary=8):
         """
         Checks if the piece is able to move left or right one space.
 
@@ -527,7 +527,7 @@ class JanggiPiece:
 
         return valid_movements_set
 
-    def _vertical_movement_check(self, game_board, lower_boundary=0, upper_boundary=9):
+    def vertical_movement_check(self, game_board, lower_boundary=0, upper_boundary=9):
         """
         Checks if the piece is able to move up or down one space.
 
@@ -577,7 +577,7 @@ class JanggiPiece:
 
         return valid_movements_set
 
-    def _diagonal_movement_check(self, game_board, horizontal_lo=0, horizontal_hi=8, vertical_lo=0, vertical_hi=9):
+    def diagonal_movement_check(self, game_board, horizontal_lo=0, horizontal_hi=8, vertical_lo=0, vertical_hi=9):
         """
         Checks if the piece is able to diagonally one space.
 
@@ -694,6 +694,7 @@ class JanggiPiece:
                 elif game_board[row + 1][column + 1].get_player() != self.get_player():
                     valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row + 1))
 
+        # If the piece is on the right edge
         if column == vertical_hi:
 
             # If the piece is not in the top corner.
@@ -740,22 +741,17 @@ class Soldier(JanggiPiece):
         """
 
         row = self.numeric_to_index(self.get_position())
-        valid_movements_set = set()
-
-        for position in self._horizontal_movement_check():
-            valid_movements_set.add(position)
+        valid_movements_set = self.horizontal_movement_check(game_board)
 
         # Red can only move to a higher index (down the board), while blue can only move to a lower index (up the board)
         # Stop running if the piece is already at the top/bottom edge.
         if self.get_player() == "red":
             if row != 9:
-                for position in self._vertical_movement_check(game_board, self.numeric_to_index(), 9):
-                    valid_movements_set.add(position)
+                valid_movements_set.union(self.vertical_movement_check(game_board, self.numeric_to_index(), 9))
 
         else:
             if row != 0:
-                for position in self._vertical_movement_check((game_board, 0, self.numeric_to_index())):
-                    valid_movements_set.add(position)
+                valid_movements_set.union(self.vertical_movement_check((game_board, 0, self.numeric_to_index())))
 
         return valid_movements_set
 
@@ -779,22 +775,15 @@ class Guard(JanggiPiece):
         """
         Checks all possible movements and returns a set of only valid movements.
         """
-        valid_movements_set = set()
-
-        ##### Still need to implement diagonal movement within the palaces.
-
-        for position in self._horizontal_movement_check(game_board, 3, 5):
-            valid_movements_set.add(position)
+        valid_movements_set = self.horizontal_movement_check(game_board, 3, 5)
 
         if self.get_player() == "red":
-
-            for position in self._vertical_movement_check(game_board, 0, 2):
-                valid_movements_set.add(position)
+            valid_movements_set.union(self.vertical_movement_check(game_board, 0, 2))
+            valid_movements_set.union(self.diagonal_movement_check(game_board, 3, 5, 0, 2))
 
         else:
-
-            for position in self._vertical_movement_check(game_board, 7, 9):
-                valid_movements_set.add(position)
+            valid_movements_set.union(self.vertical_movement_check(game_board, 7, 9))
+            valid_movements_set.union(self.diagonal_movement_check(game_board, 3, 5, 7, 9))
 
         return valid_movements_set
 
