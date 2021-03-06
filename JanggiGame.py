@@ -423,7 +423,7 @@ class JanggiPiece:
             "7": 6, "8": 7, "9": 8, "10": 9
         }
 
-        return num_dict.get(algebraic_notation[1])
+        return num_dict.get(algebraic_notation[1:])
 
     def index_to_alphabetic(self, index):
         """
@@ -510,7 +510,7 @@ class JanggiPiece:
                 valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
 
         # Piece is at the edge of the lower boundary.
-        elif column == lower_boundary:
+        if column == lower_boundary:
             if game_board[row][column + 1] is None:
                 valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
 
@@ -518,7 +518,7 @@ class JanggiPiece:
                 valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
 
         # Piece is at the edge of the upper boundary.
-        elif column == upper_boundary:
+        if column == upper_boundary:
             if game_board[row][column - 1] is None:
                 valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
 
@@ -540,6 +540,10 @@ class JanggiPiece:
         row = self.numeric_to_index(self.get_position())
         valid_movements_set = set()
 
+        # If the piece's movement is limited to only horizontal movements.
+        if row == lower_boundary and row == upper_boundary:
+            return valid_movements_set
+
         # The piece is not at the edge.
         if row != lower_boundary and row != upper_boundary:
 
@@ -560,15 +564,15 @@ class JanggiPiece:
                 valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
 
         # Piece is at the edge of the lower boundary.
-        elif row == lower_boundary:
-            if game_board[row + 1][column] is not None:
+        if row == lower_boundary:
+            if game_board[row + 1][column] is None:
                 valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
 
             elif game_board[row + 1][column].get_player() != self.get_player():
                 valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
 
         # Piece is at the edge of the upper boundary.
-        elif row == upper_boundary:
+        if row == upper_boundary:
             if game_board[row - 1][column] is None:
                 valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
 
@@ -735,23 +739,20 @@ class Soldier(JanggiPiece):
         super().__init__(player, position)
         self._piece_type = "soldier"
 
-    def valid_movements(self, game_board=None):
+    def valid_movements(self, game_board):
         """
         Checks all possible movements and returns a set of only valid movements.
         """
 
-        row = self.numeric_to_index(self.get_position())
         valid_movements_set = self.horizontal_movement_check(game_board)
 
         # Red can only move to a higher index (down the board), while blue can only move to a lower index (up the board)
         # Stop running if the piece is already at the top/bottom edge.
         if self.get_player() == "red":
-            if row != 9:
-                valid_movements_set.union(self.vertical_movement_check(game_board, self.numeric_to_index(), 9))
+            valid_movements_set.update(self.vertical_movement_check(game_board, self.numeric_to_index(self.get_position()), 9))
 
         else:
-            if row != 0:
-                valid_movements_set.union(self.vertical_movement_check((game_board, 0, self.numeric_to_index())))
+            valid_movements_set.update(self.vertical_movement_check(game_board, 0, self.numeric_to_index(self.get_position())))
 
         return valid_movements_set
 
@@ -771,19 +772,19 @@ class Guard(JanggiPiece):
         super().__init__(player, position)
         self._piece_type = "guard"
 
-    def valid_movements(self, game_board=None):
+    def valid_movements(self, game_board):
         """
         Checks all possible movements and returns a set of only valid movements.
         """
         valid_movements_set = self.horizontal_movement_check(game_board, 3, 5)
 
         if self.get_player() == "red":
-            valid_movements_set.union(self.vertical_movement_check(game_board, 0, 2))
-            valid_movements_set.union(self.diagonal_movement_check(game_board, 3, 5, 0, 2))
+            valid_movements_set.update(self.vertical_movement_check(game_board, 0, 2))
+            valid_movements_set.update(self.diagonal_movement_check(game_board, 3, 5, 0, 2))
 
         else:
-            valid_movements_set.union(self.vertical_movement_check(game_board, 7, 9))
-            valid_movements_set.union(self.diagonal_movement_check(game_board, 3, 5, 7, 9))
+            valid_movements_set.update(self.vertical_movement_check(game_board, 7, 9))
+            valid_movements_set.update(self.diagonal_movement_check(game_board, 3, 5, 7, 9))
 
         return valid_movements_set
 
