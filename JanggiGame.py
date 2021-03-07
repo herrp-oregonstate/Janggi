@@ -873,11 +873,11 @@ class Horse(JanggiPiece):
         valid_movements_set = set()
 
         # Positions the horse piece is able to move horizontally and vertically.
-        hv_movement_set = self.horizontal_movement_check(game_board)
-        hv_movement_set.update(self.vertical_movement_check(game_board))
+        hv_movements_set = self.horizontal_movement_check(game_board)
+        hv_movements_set.update(self.vertical_movement_check(game_board))
 
         # Add to a set all the possible diagonal movements at each empty vertical/horizontal location.
-        for position in hv_movement_set:
+        for position in hv_movements_set:
             if game_board[self.numeric_to_index(position)][self.alphabetic_to_index(position)] is None:
                 temp_piece = Horse(self.get_player(), position)
                 valid_movements_set.update(temp_piece.diagonal_movement_check(game_board))
@@ -919,9 +919,21 @@ class Elephant(Horse):
         hv_movements_set = self.horizontal_movement_check(game_board)
         hv_movements_set.update(self.vertical_movement_check(game_board))
 
-        for position in horse_movements_set:
-            if position is not None:
-                horse_movements_set.remove(position)
+        # Add to a set all the possible diagonal movements at each empty location.
+        for position in horse_movements_set.copy():
+            if game_board[self.numeric_to_index(position)][self.alphabetic_to_index(position)] is None:
+                temp_piece = Elephant(self.get_player(), position)
+                valid_movements_set.update(temp_piece.diagonal_movement_check(game_board))
+
+        # Removes invalid diagonal movements.
+        for position in valid_movements_set.copy():
+            if row == self.numeric_to_index(position) or column == self.alphabetic_to_index(position):
+                valid_movements_set.remove(position)
+
+            else:
+                for hv_position in hv_movements_set:
+                    if self.numeric_to_index(hv_position) == self.numeric_to_index(position) or self.alphabetic_to_index(hv_position) == self.alphabetic_to_index(position):
+                        valid_movements_set.remove(position)
 
         return valid_movements_set
 
