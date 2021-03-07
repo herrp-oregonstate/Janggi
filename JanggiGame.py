@@ -231,9 +231,19 @@ class JanggiGame:
              Guard("red", "d1"), None, Guard("red", "f1"),
              Elephant("red", "g1"), Horse("red", "h1"), Chariot("red", "i1")],
 
+            # # No guards
+            # [Chariot("red", "a1"), Elephant("red", "b1"), Horse("red", "c1"),
+            #  None, None, None,
+            #  Elephant("red", "g1"), Horse("red", "h1"), Chariot("red", "i1")],
+
             [None, None, None,
              None, General("red", "e2"), None,
              None, None, None],
+
+            # # No general
+            # [None, None, None,
+            #  None, None, None,
+            #  None, None, None],
 
             [None, Cannon("red", "b3"), None,
              None, None, None,
@@ -263,9 +273,19 @@ class JanggiGame:
              None, General("blue", "e9"), None,
              None, None, None],
 
+            # # No general
+            # [None, None, None,
+            #  None, None, None,
+            #  None, None, None],
+
             [Chariot("blue", "a10"), Elephant("blue", "b10"), Horse("blue", "c10"),
              Guard("blue", "d10"), None, Guard("blue", "f10"),
              Elephant("blue", "g10"), Horse("blue", "h10"), Chariot("blue", "i10")]
+
+            # # No guards
+            # [Chariot("blue", "a10"), Elephant("blue", "b10"), Horse("blue", "c10"),
+            #  None, None, None,
+            #  Elephant("blue", "g10"), Horse("blue", "h10"), Chariot("blue", "i10")]
         ]
 
         # self._dict_game_board = {
@@ -595,7 +615,7 @@ class JanggiPiece:
         valid_movements_set = set()
 
         # Executes if the piece is not at any of the edges.
-        if row != horizontal_lo and row != horizontal_hi and column != horizontal_lo and column != horizontal_hi:
+        if vertical_lo < row < vertical_hi and horizontal_lo < column < horizontal_hi:
 
             # The if statements checks to see if the square is empty.
             # If the square is not empty, check to see if the piece there is the current player's piece.
@@ -630,10 +650,10 @@ class JanggiPiece:
                 valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row + 1))
 
         # If the piece is on the top edge.
-        if row == horizontal_lo:
+        if row == vertical_lo:
 
             # If the piece is not in the right corner
-            if column != vertical_hi:
+            if column != horizontal_hi:
 
                 # Move bottom right
                 if game_board[row + 1][column + 1] is None:
@@ -643,7 +663,7 @@ class JanggiPiece:
                     valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row + 1))
 
             # If the piece is not in the left corner.
-            if column != vertical_lo:
+            if column != horizontal_lo:
 
                 # Move bottom left
                 if game_board[row + 1][column - 1] is None:
@@ -653,20 +673,10 @@ class JanggiPiece:
                     valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row + 1))
 
         # If the piece is on the bottom edge.
-        if row == horizontal_hi:
+        if row == vertical_hi:
 
             # If the piece is not in the right corner.
-            if column != vertical_hi:
-
-                # Move top left
-                if game_board[row - 1][column - 1] is None:
-                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 1))
-
-                elif game_board[row - 1][column - 1].get_player() != self.get_player():
-                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 1))
-
-            # If the piece is not in the left corner.
-            if column != vertical_lo:
+            if column != horizontal_hi:
 
                 # Move top right
                 if game_board[row - 1][column + 1] is None:
@@ -675,11 +685,21 @@ class JanggiPiece:
                 elif game_board[row - 1][column + 1].get_player() != self.get_player():
                     valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row - 1))
 
+            # If the piece is not in the left corner.
+            if column != horizontal_lo:
+
+                # Move top left
+                if game_board[row - 1][column - 1] is None:
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 1))
+
+                elif game_board[row - 1][column - 1].get_player() != self.get_player():
+                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 1))
+
         # If the piece is on the left edge
-        if column == vertical_lo:
+        if column == horizontal_lo:
 
             # If the piece is not in the top corner.
-            if row != horizontal_lo:
+            if row != vertical_lo:
 
                 # Move top right
                 if game_board[row - 1][column + 1] is None:
@@ -689,7 +709,7 @@ class JanggiPiece:
                     valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row - 1))
 
             # If the piece is not in the bottom corner.
-            if row != horizontal_hi:
+            if row != vertical_hi:
 
                 # Move bottom right
                 if game_board[row + 1][column + 1] is None:
@@ -699,10 +719,10 @@ class JanggiPiece:
                     valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row + 1))
 
         # If the piece is on the right edge
-        if column == vertical_hi:
+        if column == horizontal_hi:
 
             # If the piece is not in the top corner.
-            if row != horizontal_lo:
+            if row != vertical_lo:
 
                 # Move top left
                 if game_board[row - 1][column - 1] is None:
@@ -712,7 +732,7 @@ class JanggiPiece:
                     valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 1))
 
             # If the piece is not in the bottom corner.
-            if row != horizontal_hi:
+            if row != vertical_hi:
 
                 # Move bottom left
                 if game_board[row + 1][column - 1] is None:
@@ -776,15 +796,32 @@ class Guard(JanggiPiece):
         """
         Checks all possible movements and returns a set of only valid movements.
         """
+
+        column = self.alphabetic_to_index(self.get_position())
+        row = self.numeric_to_index(self.get_position())
         valid_movements_set = self.horizontal_movement_check(game_board, 3, 5)
 
         if self.get_player() == "red":
             valid_movements_set.update(self.vertical_movement_check(game_board, 0, 2))
-            valid_movements_set.update(self.diagonal_movement_check(game_board, 3, 5, 0, 2))
+
+            # If the piece is in the corners of the red palace.
+            if (row == 0 or row == 2) and (column == 3 or column == 5):
+                valid_movements_set.update(self.diagonal_movement_check(game_board, 3, 5, 0, 2))
+
+            # If the piece is in the middle of the red palace.
+            elif row == 1 and column == 4:
+                valid_movements_set.update(self.diagonal_movement_check(game_board, 3, 5, 0, 2))
 
         else:
             valid_movements_set.update(self.vertical_movement_check(game_board, 7, 9))
-            valid_movements_set.update(self.diagonal_movement_check(game_board, 3, 5, 7, 9))
+
+            # If the piece is in the corners of the blue palace.
+            if (row == 7 or row == 9) and (column == 3 or column == 5):
+                valid_movements_set.update(self.diagonal_movement_check(game_board, 3, 5, 7, 9))
+
+            # If the piece is in the middle of the blue palace.
+            elif row == 8 and column == 4:
+                valid_movements_set.update(self.diagonal_movement_check(game_board, 3, 5, 7, 9))
 
         return valid_movements_set
 
