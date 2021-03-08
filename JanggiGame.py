@@ -360,10 +360,11 @@ class JanggiGame:
         """
 
         print("Attempting: ", piece_location, "->", new_location)
-        piece_row = JanggiPiece.numeric_to_index(piece_location)
-        piece_column = JanggiPiece.alphabetic_to_index(piece_location)
-        new_row = JanggiPiece.numeric_to_index(new_location)
-        new_column = JanggiPiece.alphabetic_to_index(new_location)
+        dummy_piece = JanggiPiece(None, None)
+        piece_row = dummy_piece.numeric_to_index(piece_location)
+        piece_column = dummy_piece.alphabetic_to_index(piece_location)
+        new_row = dummy_piece.numeric_to_index(new_location)
+        new_column = dummy_piece.alphabetic_to_index(new_location)
         piece_to_be_moved = self._game_board[piece_row][piece_column]
         location_to_move_to = self._game_board[new_row][new_column]
 
@@ -384,13 +385,13 @@ class JanggiGame:
         if new_location not in piece_to_be_moved.valid_movements(self._game_board):
             return False
 
-        self._game_board[new_row][new_column] = piece_to_be_moved.set_position(JanggiPiece.indices_to_algebraic_notation(new_column, new_row))
+        self._game_board[new_row][new_column] = piece_to_be_moved.set_position(piece_to_be_moved.indices_to_algebraic_notation(new_column, new_row))
         self._game_board[piece_row][piece_column] = None
 
         # Return False if the move will make the player be in check.
         if self._blues_turn:
             if self.is_in_check("blue"):
-                self._game_board[piece_row][piece_column] = piece_to_be_moved.set_position(JanggiPiece.indices_to_algebraic_notation(piece_column, piece_row))
+                self._game_board[piece_row][piece_column] = piece_to_be_moved.set_position(piece_to_be_moved.indices_to_algebraic_notation(piece_column, piece_row))
                 self._game_board[new_row][new_column] = location_to_move_to
                 return False
         else:
@@ -398,6 +399,8 @@ class JanggiGame:
                 self._game_board[piece_row][piece_column] = piece_to_be_moved.set_position(JanggiPiece.indices_to_algebraic_notation(piece_column, piece_row))
                 self._game_board[new_row][new_column] = location_to_move_to
                 return False
+
+        self._blues_turn = not self._blues_turn
 
         return True
 
