@@ -288,6 +288,9 @@ class JanggiGame:
             #  Elephant("blue", "g10"), Horse("blue", "h10"), Chariot("blue", "i10")]
         ]
 
+        self._remaining_blue_pieces = []
+        self._remaining_red_pieces = []
+
         # self._dict_game_board = {
         #     "a1": Chariot("red", "a1"), "b1": Elephant("red", "b1"), "c1": Horse("red", "c1"),
         #     "d1": Guard("red", "d1"), "e1": None, "f1": Guard("red", "f1"),
@@ -356,7 +359,46 @@ class JanggiGame:
         finished.
         """
 
-        pass
+        piece_row = JanggiPiece.numeric_to_index(piece_location.lower())
+        piece_column = JanggiPiece.alphabetic_to_index(piece_location.lower())
+        new_row = JanggiPiece.numeric_to_index(new_location.lower())
+        new_column = JanggiPiece.alphabetic_to_index(new_location.lower())
+        piece_to_be_moved = self._game_board[piece_row][piece_column]
+        location_to_move_to = self._game_board[new_row][new_column]
+
+        # Return False if there is no piece in the location.
+        if piece_to_be_moved is None:
+            return False
+
+        # Return False if it's not the current player's piece.
+        if self._blues_turn:
+            if piece_to_be_moved.get_player() != "blue":
+                return False
+
+        if not self._blues_turn:
+            if piece_to_be_moved.get_player() != "red":
+                return False
+
+        # Return False if the movement is invalid.
+        if new_location not in piece_to_be_moved.valid_movements(self._game_board):
+            return False
+
+        self._game_board[new_row][new_column] = piece_to_be_moved.set_position(JanggiPiece.indices_to_algebraic_notation(new_column, new_row))
+        self._game_board[piece_row][piece_column] = None
+
+        # Return False if the move will make the player be in check.
+        if self._blues_turn:
+            if self.is_in_check("blue"):
+                self._game_board[piece_row][piece_column] = piece_to_be_moved.set_position(JanggiPiece.indices_to_algebraic_notation(piece_column, piece_row))
+                self._game_board[new_row][new_column] = location_to_move_to
+                return False
+        else:
+            if self.is_in_check("red"):
+                self._game_board[piece_row][piece_column] = piece_to_be_moved.set_position(JanggiPiece.indices_to_algebraic_notation(piece_column, piece_row))
+                self._game_board[new_row][new_column] = location_to_move_to
+                return False
+
+        return True
 
     def is_in_check(self, player_color):
         """
@@ -366,7 +408,24 @@ class JanggiGame:
         Returns True if the player's general is in check.
         """
 
-        pass
+        opponent_movements_set = set()
+        general_location = None
+
+        for row in self._game_board:
+            for column in row:
+
+                if column is not None:
+                    if column.get_player() != player_color:
+                        opponent_movements_set.update(column.valid_movements(self._game_board))
+
+                    else:
+                        if column.get_piece_name() == "general":
+                            general_location = column.get_position()
+
+        if general_location in opponent_movements_set:
+            return True
+
+        return False
 
 
 class JanggiPiece:
@@ -844,8 +903,6 @@ class General(Guard):
 
         super().__init__(player, position)
         self._piece_type = "general"
-
-    pass
 
 
 class Horse(JanggiPiece):
