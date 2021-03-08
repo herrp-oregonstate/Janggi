@@ -954,17 +954,87 @@ class Chariot(JanggiPiece):
         super().__init__(player, position)
         self._piece_type = "chariot"
 
+    def inf_movement(self, game_board):
+        """
+        Adds each space up, down, left, and right from the piece to a set until it reaches the edge or another piece.
+        If it reaches a piece, it will also add the piece's position to the set.
+
+        Takes the game board in order to check piece positions.
+        Returns a set of all positions found to be None and the first piece that is encountered in each direction.
+        """
+        column = self.alphabetic_to_index(self.get_position())
+        row = self.numeric_to_index(self.get_position())
+        hv_movements_set = set()
+
+        # Iterate left from piece.
+        while column > 0 and game_board[row][column - 1] is None:
+            hv_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+            column -= 1
+            if column > 0 and game_board[row][column - 1] is not None:
+                hv_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+
+        column = self.alphabetic_to_index(self.get_position())
+
+        # Iterate right from piece.
+        while column < 8 and game_board[row][column + 1] is None:
+            hv_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+            column += 1
+            if column < 8 and game_board[row][column + 1] is not None:
+                hv_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+
+        column = self.alphabetic_to_index(self.get_position())
+
+        # Iterate up from piece.
+        while row > 0 and game_board[row - 1][column] is None:
+            hv_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+            row -= 1
+            if row > 0 and game_board[row - 1][column] is not None:
+                hv_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+
+        row = self.numeric_to_index(self.get_position())
+
+        # Iterate down from piece
+        while row < 9 and game_board[row + 1][column] is None:
+            hv_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+            row += 1
+            if row < 9 and game_board[row + 1][column] is not None:
+                hv_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+
+        return hv_movements_set
+
     def valid_movements(self, game_board):
         """
         Checks all possible movements on the game board and returns a set of only valid movements.
         """
-        valid_movements_set = set()
+
         column = self.alphabetic_to_index(self.get_position())
         row = self.numeric_to_index(self.get_position())
+        valid_movements_set = self.inf_movement(game_board)
+
+        # Look for positions with a piece in it. If it is the player's piece, remove it from the set.
+        for position in valid_movements_set.copy():
+            if game_board[self.numeric_to_index(position)][self.alphabetic_to_index(position)] is not None:
+                if game_board[self.numeric_to_index(position)][self.alphabetic_to_index(position)].get_player() == self.get_player():
+                    valid_movements_set.remove(position)
+
+        # Diagonal movements available when inside a palace.
+        # If the piece is in the corners of the red palace.
+        if (row == 0 or row == 2) and (column == 3 or column == 5):
+            valid_movements_set.update(self.diagonal_movement_check(game_board, 3, 5, 0, 2))
+
+        # If the piece is in the middle of the red palace.
+        elif row == 1 and column == 4:
+            valid_movements_set.update(self.diagonal_movement_check(game_board, 3, 5, 0, 2))
+
+        # If the piece is in the corners of the blue palace.
+        if (row == 7 or row == 9) and (column == 3 or column == 5):
+            valid_movements_set.update(self.diagonal_movement_check(game_board, 3, 5, 7, 9))
+
+        # If the piece is in the middle of the blue palace.
+        elif row == 8 and column == 4:
+            valid_movements_set.update(self.diagonal_movement_check(game_board, 3, 5, 7, 9))
 
         return valid_movements_set
-
-    pass
 
 
 class Cannon(Chariot):
