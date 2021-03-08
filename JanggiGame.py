@@ -508,7 +508,7 @@ class JanggiPiece:
         # Changes the current piece's location from algebraic notation to list indices.
         column = self.alphabetic_to_index(self.get_position())
         row = self.numeric_to_index(self.get_position())
-        valid_movements_set = set()
+        h_movements_set = set()
 
         # The piece is not at the edge.
         if column != h_lo_bound and column != h_hi_bound:
@@ -518,34 +518,34 @@ class JanggiPiece:
             # Add it to the list of valid moves if the square is empty or the piece is not the player's piece.
 
             if game_board[row][column + 1] is None:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+                h_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
 
             elif game_board[row][column + 1].get_player() != self.get_player():
-                valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+                h_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
 
             if game_board[row][column - 1] is None:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+                h_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
 
             elif game_board[row][column - 1].get_player() != self.get_player():
-                valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+                h_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
 
         # Piece is at the edge of the lower boundary.
         if column == h_lo_bound:
             if game_board[row][column + 1] is None:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+                h_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
 
             elif game_board[row][column + 1].get_player() != self.get_player():
-                valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+                h_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
 
         # Piece is at the edge of the upper boundary.
         if column == h_hi_bound:
             if game_board[row][column - 1] is None:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+                h_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
 
             elif game_board[row][column - 1].get_player() != self.get_player():
-                valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+                h_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
 
-        return valid_movements_set
+        return h_movements_set
 
     def vertical_movement_check(self, game_board, v_lo_bound=0, v_hi_bound=9):
         """
@@ -558,11 +558,11 @@ class JanggiPiece:
         # Changes algebraic notation to list indices.
         column = self.alphabetic_to_index(self.get_position())
         row = self.numeric_to_index(self.get_position())
-        valid_movements_set = set()
+        v_movements_set = set()
 
         # If the piece's movement is limited to only horizontal movements.
         if row == v_lo_bound and row == v_hi_bound:
-            return valid_movements_set
+            return v_movements_set
 
         # The piece is not at the edge.
         if row != v_lo_bound and row != v_hi_bound:
@@ -572,34 +572,34 @@ class JanggiPiece:
             # Add it to the list of valid moves if the square is empty or the piece is not the player's piece.
 
             if game_board[row + 1][column] is None:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+                v_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
 
             elif game_board[row + 1][column].get_player() != self.get_player():
-                valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+                v_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
 
             if game_board[row - 1][column] is None:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+                v_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
 
             elif game_board[row - 1][column].get_player() != self.get_player():
-                valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+                v_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
 
         # Piece is at the edge of the lower boundary.
         if row == v_lo_bound:
             if game_board[row + 1][column] is None:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+                v_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
 
             elif game_board[row + 1][column].get_player() != self.get_player():
-                valid_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+                v_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
 
         # Piece is at the edge of the upper boundary.
         if row == v_hi_bound:
             if game_board[row - 1][column] is None:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+                v_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
 
             elif game_board[row - 1][column].get_player() != self.get_player():
-                valid_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+                v_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
 
-        return valid_movements_set
+        return v_movements_set
 
     def diagonal_movement_check(self, game_board, h_lo_bound=0, h_hi_bound=8, v_lo_bound=0, v_hi_bound=9):
         """
@@ -612,7 +612,7 @@ class JanggiPiece:
         # Changes algebraic notation to list indices.
         column = self.alphabetic_to_index(self.get_position())
         row = self.numeric_to_index(self.get_position())
-        valid_movements_set = set()
+        d_movements_set = set()
 
         # Executes if the piece is not at any of the edges.
         if v_lo_bound < row < v_hi_bound and h_lo_bound < column < h_hi_bound:
@@ -623,31 +623,31 @@ class JanggiPiece:
 
             # Move top left
             if game_board[row - 1][column - 1] is None:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 1))
+                d_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 1))
 
             elif game_board[row - 1][column - 1].get_player() != self.get_player():
-                valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 1))
+                d_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 1))
 
             # Move top right
             if game_board[row - 1][column + 1] is None:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row - 1))
+                d_movements_set.add(self.indices_to_algebraic_notation(column + 1, row - 1))
 
             elif game_board[row - 1][column + 1].get_player() != self.get_player():
-                valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row - 1))
+                d_movements_set.add(self.indices_to_algebraic_notation(column + 1, row - 1))
 
             # Move bottom right
             if game_board[row + 1][column + 1] is None:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row + 1))
+                d_movements_set.add(self.indices_to_algebraic_notation(column + 1, row + 1))
 
             elif game_board[row + 1][column + 1].get_player() != self.get_player():
-                valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row + 1))
+                d_movements_set.add(self.indices_to_algebraic_notation(column + 1, row + 1))
 
             # Move bottom left
             if game_board[row + 1][column - 1] is None:
-                valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row + 1))
+                d_movements_set.add(self.indices_to_algebraic_notation(column - 1, row + 1))
 
             elif game_board[row + 1][column - 1].get_player() != self.get_player():
-                valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row + 1))
+                d_movements_set.add(self.indices_to_algebraic_notation(column - 1, row + 1))
 
         # If the piece is on the top edge.
         if row == v_lo_bound:
@@ -657,20 +657,20 @@ class JanggiPiece:
 
                 # Move bottom right
                 if game_board[row + 1][column + 1] is None:
-                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row + 1))
+                    d_movements_set.add(self.indices_to_algebraic_notation(column + 1, row + 1))
 
                 elif game_board[row + 1][column + 1].get_player() != self.get_player():
-                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row + 1))
+                    d_movements_set.add(self.indices_to_algebraic_notation(column + 1, row + 1))
 
             # If the piece is not in the left corner.
             if column != h_lo_bound:
 
                 # Move bottom left
                 if game_board[row + 1][column - 1] is None:
-                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row + 1))
+                    d_movements_set.add(self.indices_to_algebraic_notation(column - 1, row + 1))
 
                 elif game_board[row + 1][column - 1].get_player() != self.get_player():
-                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row + 1))
+                    d_movements_set.add(self.indices_to_algebraic_notation(column - 1, row + 1))
 
         # If the piece is on the bottom edge.
         if row == v_hi_bound:
@@ -680,20 +680,20 @@ class JanggiPiece:
 
                 # Move top right
                 if game_board[row - 1][column + 1] is None:
-                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row - 1))
+                    d_movements_set.add(self.indices_to_algebraic_notation(column + 1, row - 1))
 
                 elif game_board[row - 1][column + 1].get_player() != self.get_player():
-                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row - 1))
+                    d_movements_set.add(self.indices_to_algebraic_notation(column + 1, row - 1))
 
             # If the piece is not in the left corner.
             if column != h_lo_bound:
 
                 # Move top left
                 if game_board[row - 1][column - 1] is None:
-                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 1))
+                    d_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 1))
 
                 elif game_board[row - 1][column - 1].get_player() != self.get_player():
-                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 1))
+                    d_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 1))
 
         # If the piece is on the left edge
         if column == h_lo_bound:
@@ -703,20 +703,20 @@ class JanggiPiece:
 
                 # Move top right
                 if game_board[row - 1][column + 1] is None:
-                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row - 1))
+                    d_movements_set.add(self.indices_to_algebraic_notation(column + 1, row - 1))
 
                 elif game_board[row - 1][column + 1].get_player() != self.get_player():
-                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row - 1))
+                    d_movements_set.add(self.indices_to_algebraic_notation(column + 1, row - 1))
 
             # If the piece is not in the bottom corner.
             if row != v_hi_bound:
 
                 # Move bottom right
                 if game_board[row + 1][column + 1] is None:
-                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row + 1))
+                    d_movements_set.add(self.indices_to_algebraic_notation(column + 1, row + 1))
 
                 elif game_board[row + 1][column + 1].get_player() != self.get_player():
-                    valid_movements_set.add(self.indices_to_algebraic_notation(column + 1, row + 1))
+                    d_movements_set.add(self.indices_to_algebraic_notation(column + 1, row + 1))
 
         # If the piece is on the right edge
         if column == h_hi_bound:
@@ -726,22 +726,22 @@ class JanggiPiece:
 
                 # Move top left
                 if game_board[row - 1][column - 1] is None:
-                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 1))
+                    d_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 1))
 
                 elif game_board[row - 1][column - 1].get_player() != self.get_player():
-                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 1))
+                    d_movements_set.add(self.indices_to_algebraic_notation(column - 1, row - 1))
 
             # If the piece is not in the bottom corner.
             if row != v_hi_bound:
 
                 # Move bottom left
                 if game_board[row + 1][column - 1] is None:
-                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row + 1))
+                    d_movements_set.add(self.indices_to_algebraic_notation(column - 1, row + 1))
 
                 elif game_board[row + 1][column - 1].get_player() != self.get_player():
-                    valid_movements_set.add(self.indices_to_algebraic_notation(column - 1, row + 1))
+                    d_movements_set.add(self.indices_to_algebraic_notation(column - 1, row + 1))
 
-        return valid_movements_set
+        return d_movements_set
 
 
 class Soldier(JanggiPiece):
@@ -954,10 +954,10 @@ class Chariot(JanggiPiece):
         super().__init__(player, position)
         self._piece_type = "chariot"
 
-    def inf_movement(self, game_board):
+    def inf_hv_movement(self, game_board):
         """
         Adds each space up, down, left, and right from the piece to a set until it reaches the edge or another piece.
-        If it reaches a piece, it will also add the piece's position to the set.
+        If it reaches a piece, it will also add its position to the set.
 
         Takes the game board in order to check piece positions.
         Returns a set of all positions found to be None and the first piece that is encountered in each direction.
@@ -1021,7 +1021,7 @@ class Chariot(JanggiPiece):
 
         column = self.alphabetic_to_index(self.get_position())
         row = self.numeric_to_index(self.get_position())
-        valid_movements_set = self.inf_movement(game_board)
+        valid_movements_set = self.inf_hv_movement(game_board)
 
         # Look for positions with a piece in it. If it is the player's piece, remove it from the set.
         for position in valid_movements_set.copy():
@@ -1034,6 +1034,18 @@ class Chariot(JanggiPiece):
         if (row == 0 or row == 2) and (column == 3 or column == 5):
             valid_movements_set.update(self.diagonal_movement_check(game_board, 3, 5, 0, 2))
 
+            # Possible for the piece to move an additional space diagonally if the middle of the palace is empty.
+            if game_board[1][4] is None:
+                temp_piece = Chariot(self.get_player(), "e2")
+                temp_set = temp_piece.diagonal_movement_check(game_board)
+
+                # Removes invalid diagonal movements.
+                for temp_position in temp_set.copy():
+                    if row == self.numeric_to_index(temp_position) or column == self.alphabetic_to_index(temp_position):
+                        temp_set.remove(temp_position)
+
+                valid_movements_set.update(temp_set)
+
         # If the piece is in the middle of the red palace.
         elif row == 1 and column == 4:
             valid_movements_set.update(self.diagonal_movement_check(game_board, 3, 5, 0, 2))
@@ -1041,6 +1053,18 @@ class Chariot(JanggiPiece):
         # If the piece is in the corners of the blue palace.
         if (row == 7 or row == 9) and (column == 3 or column == 5):
             valid_movements_set.update(self.diagonal_movement_check(game_board, 3, 5, 7, 9))
+
+            # Possible for the piece to move an additional space diagonally if the middle of the palace is empty.
+            if game_board[8][4] is None:
+                temp_piece = Chariot(self.get_player(), "e9")
+                temp_set = temp_piece.diagonal_movement_check(game_board)
+
+                # Removes invalid diagonal movements.
+                for temp_position in temp_set.copy():
+                    if row == self.numeric_to_index(temp_position) or column == self.alphabetic_to_index(temp_position):
+                        temp_set.remove(temp_position)
+
+                valid_movements_set.update(temp_set)
 
         # If the piece is in the middle of the blue palace.
         elif row == 8 and column == 4:
@@ -1074,7 +1098,7 @@ class Cannon(Chariot):
         """
         column = self.alphabetic_to_index(self.get_position())
         row = self.numeric_to_index(self.get_position())
-        piece_location_set = self.inf_movement(game_board)
+        piece_location_set = self.inf_hv_movement(game_board)
         valid_movements_set = set()
 
         # Look for squares with pieces.
@@ -1090,7 +1114,7 @@ class Cannon(Chariot):
         # Create a temporary piece in each location and get its vertical and horizontal movements.
         for position in piece_location_set:
             temp_piece = Cannon(self.get_player(), position)
-            temp_set = temp_piece.inf_movement(game_board)
+            temp_set = temp_piece.inf_hv_movement(game_board)
 
             for temp_position in temp_set:
 
@@ -1121,12 +1145,26 @@ class Cannon(Chariot):
         # Diagonal movements available when inside a palace.
         # If the piece is in the corners of the red palace.
         if (row == 0 or row == 2) and (column == 3 or column == 5):
-            if game_board[1][4] is not None or game_board[1][4].get_piece_name() != "cannon":
-                valid_movements_set.update(self.diagonal_movement_check(game_board, 3, 5, 0, 2))
+            if game_board[1][4] is not None and game_board[1][4].get_piece_name() != "cannon":
+                temp_piece = Cannon(self.get_player(), "e2")
+                temp_set = temp_piece.diagonal_movement_check(game_board)
+
+                for temp_position in temp_set.copy():
+                    if row == self.numeric_to_index(temp_position) or column == self.alphabetic_to_index(temp_position):
+                        temp_set.remove(temp_position)
+
+                valid_movements_set.update(temp_set)
 
         # If the piece is in the corners of the blue palace.
         if (row == 7 or row == 9) and (column == 3 or column == 5):
-            if game_board[8][4] is not None or game_board[8][4].get_piece_name() != "cannon":
-                valid_movements_set.update(self.diagonal_movement_check(game_board, 3, 5, 7, 9))
+            if game_board[8][4] is not None and game_board[8][4].get_piece_name() != "cannon":
+                temp_piece = Cannon(self.get_player(), "e9")
+                temp_set = temp_piece.diagonal_movement_check(game_board)
+
+                for temp_position in temp_set.copy():
+                    if row == self.numeric_to_index(temp_position) or column == self.alphabetic_to_index(temp_position):
+                        temp_set.remove(temp_position)
+
+                valid_movements_set.update(temp_set)
 
         return valid_movements_set
