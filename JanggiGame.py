@@ -359,10 +359,11 @@ class JanggiGame:
         finished.
         """
 
-        piece_row = JanggiPiece.numeric_to_index(piece_location.lower())
-        piece_column = JanggiPiece.alphabetic_to_index(piece_location.lower())
-        new_row = JanggiPiece.numeric_to_index(new_location.lower())
-        new_column = JanggiPiece.alphabetic_to_index(new_location.lower())
+        print("Attempting: ", piece_location, "->", new_location)
+        piece_row = JanggiPiece.numeric_to_index(piece_location)
+        piece_column = JanggiPiece.alphabetic_to_index(piece_location)
+        new_row = JanggiPiece.numeric_to_index(new_location)
+        new_column = JanggiPiece.alphabetic_to_index(new_location)
         piece_to_be_moved = self._game_board[piece_row][piece_column]
         location_to_move_to = self._game_board[new_row][new_column]
 
@@ -495,6 +496,8 @@ class JanggiPiece:
         Takes an algebraic notation from a1 to i10.
         Returns the index of the numerical part.
         """
+
+        algebraic_notation.lower()
 
         num_dict = {
             "1": 0, "2": 1, "3": 2,
