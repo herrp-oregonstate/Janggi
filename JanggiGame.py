@@ -967,38 +967,50 @@ class Chariot(JanggiPiece):
         hv_movements_set = set()
 
         # Iterate left from piece.
-        while column > 0 and game_board[row][column - 1] is None:
-            hv_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
-            column -= 1
-            if column > 0 and game_board[row][column - 1] is not None:
+        if game_board[row][column - 1] is None:
+            while column > 0 and game_board[row][column - 1] is None:
                 hv_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+                column -= 1
+                if column > 0 and game_board[row][column - 1] is not None:
+                    hv_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
+        else:
+            hv_movements_set.add(self.indices_to_algebraic_notation(column - 1, row))
 
         column = self.alphabetic_to_index(self.get_position())
 
         # Iterate right from piece.
-        while column < 8 and game_board[row][column + 1] is None:
-            hv_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
-            column += 1
-            if column < 8 and game_board[row][column + 1] is not None:
+        if game_board[row][column + 1] is None:
+            while column < 8 and game_board[row][column + 1] is None:
                 hv_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+                column += 1
+                if column < 8 and game_board[row][column + 1] is not None:
+                    hv_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
+        else:
+            hv_movements_set.add(self.indices_to_algebraic_notation(column + 1, row))
 
         column = self.alphabetic_to_index(self.get_position())
 
         # Iterate up from piece.
-        while row > 0 and game_board[row - 1][column] is None:
-            hv_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
-            row -= 1
-            if row > 0 and game_board[row - 1][column] is not None:
+        if game_board[row - 1][column] is None:
+            while row > 0 and game_board[row - 1][column] is None:
                 hv_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+                row -= 1
+                if row > 0 and game_board[row - 1][column] is not None:
+                    hv_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
+        else:
+            hv_movements_set.add(self.indices_to_algebraic_notation(column, row - 1))
 
         row = self.numeric_to_index(self.get_position())
 
         # Iterate down from piece
-        while row < 9 and game_board[row + 1][column] is None:
-            hv_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
-            row += 1
-            if row < 9 and game_board[row + 1][column] is not None:
+        if game_board[row + 1][column] is None:
+            while row < 9 and game_board[row + 1][column] is None:
                 hv_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+                row += 1
+                if row < 9 and game_board[row + 1][column] is not None:
+                    hv_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
+        else:
+            hv_movements_set.add(self.indices_to_algebraic_notation(column, row + 1))
 
         return hv_movements_set
 
@@ -1060,10 +1072,51 @@ class Cannon(Chariot):
         """
         Checks all possible movements on the game board and returns a set of only valid movements.
         """
-        valid_movements_set = set()
         column = self.alphabetic_to_index(self.get_position())
         row = self.numeric_to_index(self.get_position())
+        piece_location_set = self.inf_movement(game_board)
+        valid_movements_set = set()
+        print(piece_location_set)
+
+        # Look for squares with pieces.
+        for position in piece_location_set.copy():
+            if game_board[self.numeric_to_index(position)][self.alphabetic_to_index(position)] is None:
+                piece_location_set.remove(position)
+
+            # Unable to jump over other cannons
+            if game_board[self.numeric_to_index(position)][self.alphabetic_to_index(position)] is not None:
+                if game_board[self.numeric_to_index(position)][self.alphabetic_to_index(position)].get_piece_name() == self.get_piece_name():
+                    piece_location_set.remove(position)
+
+        # Create a temporary piece in each location and get its vertical and horizontal movements.
+        for position in piece_location_set:
+            temp_piece = Cannon(self.get_player(), position)
+            temp_set = temp_piece.inf_movement(game_board)
+
+            for temp_position in temp_set:
+
+                # The cannon must move to a space within the same row or column.
+                # The space must also be after the piece, since the cannon is jumping over it.
+                if row == self.numeric_to_index(temp_position):
+
+                    if self.alphabetic_to_index(temp_position) < self.alphabetic_to_index(position) and self.alphabetic_to_index(temp_position) < column:
+                        valid_movements_set.add(temp_position)
+
+                    elif self.alphabetic_to_index(temp_position) > self.alphabetic_to_index(position) and self.alphabetic_to_index(temp_position) > column:
+                        valid_movements_set.add(temp_position)
+
+                if column == self.alphabetic_to_index(position):
+
+                    if self.numeric_to_index(temp_position) < self.numeric_to_index(position) and self.numeric_to_index(temp_position) < row:
+                        valid_movements_set.add(temp_position)
+
+                    if self.numeric_to_index(temp_position) > self.numeric_to_index(position) and self.numeric_to_index(temp_position) > row:
+                        valid_movements_set.add(temp_position)
+
+        # Cannot capture your own pieces.
+        for position in valid_movements_set.copy():
+            if game_board[self.numeric_to_index(position)][self.alphabetic_to_index(position)] is not None:
+                if game_board[self.numeric_to_index(position)][self.alphabetic_to_index(position)].get_player() == self.get_player():
+                    valid_movements_set.remove(position)
 
         return valid_movements_set
-
-    pass
