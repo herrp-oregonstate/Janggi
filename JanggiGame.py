@@ -360,7 +360,7 @@ class JanggiGame:
         """
 
         print("Attempting: ", piece_location, "->", new_location)
-        dummy_piece = JanggiPiece(None, None)
+        dummy_piece = JanggiPiece(None, None)       # Used to use the class methods.
         piece_row = dummy_piece.numeric_to_index(piece_location)
         piece_column = dummy_piece.alphabetic_to_index(piece_location)
         new_row = dummy_piece.numeric_to_index(new_location)
@@ -384,6 +384,19 @@ class JanggiGame:
                 print(3)
                 return False
 
+        # The user passes their turn only available if they're not in check.
+        if self._blues_turn:
+            if not self.is_in_check("blue"):
+                if piece_location == new_location:
+                    self._blues_turn = not self._blues_turn
+                    return True
+
+        elif not self._blues_turn:
+            if not self.is_in_check("red"):
+                if piece_location == new_location:
+                    self._blues_turn = not self._blues_turn
+                    return True
+
         # Return False if the movement is invalid.
         if new_location not in piece_to_be_moved.valid_movements(self._game_board):
             print(4)
@@ -396,7 +409,7 @@ class JanggiGame:
 
         print(self._game_board[new_row][new_column])
 
-        # Return False if the move will make the player be in check.
+        # Return False if the move will make the player be in check. Reset the board back to its previous state if so.
         if self._blues_turn:
             if self.is_in_check("blue"):
                 print(5)
