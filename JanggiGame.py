@@ -370,33 +370,43 @@ class JanggiGame:
 
         # Return False if there is no piece in the location.
         if piece_to_be_moved is None:
+            print(1)
             return False
 
         # Return False if it's not the current player's piece.
         if self._blues_turn:
             if piece_to_be_moved.get_player() != "blue":
+                print(2)
                 return False
 
         if not self._blues_turn:
             if piece_to_be_moved.get_player() != "red":
+                print(3)
                 return False
 
         # Return False if the movement is invalid.
         if new_location not in piece_to_be_moved.valid_movements(self._game_board):
+            print(4)
             return False
 
-        self._game_board[new_row][new_column] = piece_to_be_moved.set_position(piece_to_be_moved.indices_to_algebraic_notation(new_column, new_row))
+        # Move the piece into the new position, and remove the piece from the old position. Update its position.
+        self._game_board[new_row][new_column] = piece_to_be_moved
         self._game_board[piece_row][piece_column] = None
+        self._game_board[new_row][new_column].set_position(piece_to_be_moved.indices_to_algebraic_notation(new_column, new_row))
+
+        print(self._game_board[new_row][new_column])
 
         # Return False if the move will make the player be in check.
         if self._blues_turn:
             if self.is_in_check("blue"):
-                self._game_board[piece_row][piece_column] = piece_to_be_moved.set_position(piece_to_be_moved.indices_to_algebraic_notation(piece_column, piece_row))
+                print(5)
+                self._game_board[piece_row][piece_column] = piece_to_be_moved
                 self._game_board[new_row][new_column] = location_to_move_to
                 return False
         else:
             if self.is_in_check("red"):
-                self._game_board[piece_row][piece_column] = piece_to_be_moved.set_position(JanggiPiece.indices_to_algebraic_notation(piece_column, piece_row))
+                print(6)
+                self._game_board[piece_row][piece_column] = piece_to_be_moved
                 self._game_board[new_row][new_column] = location_to_move_to
                 return False
 
