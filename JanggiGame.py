@@ -27,165 +27,7 @@
 #
 #     The player must checkmate the opposing general in order to win.
 
-
-# -------------------------------DETAILED TEXT DESCRIPTIONS OF HOW TO HANDLE THE SCENARIOS-------------------------------
-#
-#   (1) Initializing the board and (2) Determining how to represent pieces at the given location on the board:
-#
-#           Currently, I plan on using a list to store the locations of the pieces on the board. The list is composed of
-#       10 elements which are also lists, and they represents the rows of the board. Each of the 10 lists contain 9
-#       elements, which will represent the columns of the board. I will hard code the starting positions into the list,
-#       since we don't have to account for the option to switch the horse and elephant around. For each space that does
-#       not have a piece, it will be initialized to None.
-#
-#       At the moment, I also have a dictionary representation of the board commented out. Depending on how the rest of
-#       my functions go, I could switch to a dictionary representation of the board in case it's easier to implement,
-#       but for now I am planning on using the list representation. The dictionary representation will have the keys be
-#       the algebraic notation for each space on the board. Similar to the list representation, I will hard code the
-#       starting positions to its corresponding keys. If a space does not have a piece, the key value will be to None.
-#
-#       Lastly, when a JanggiPiece is created, it is initialized to belonging to a player and having a position on the
-#       board. This is how I will keep track of which piece belongs to which player and their current locations. The
-#       position will be stored in algebraic notation as a string.
-#
-#   (3) Determining how to validate a given move according to the rules for each piece, turn taking, and other game
-#       rules:
-#
-#           I will have each different type of piece as its own class. Each piece will inherit from JanggiPiece. Each
-#       piece type will also have a variable to store their piece type. Each class will have their own valid_movements
-#       method. This method will check for all possible positions that the piece is able to move to and ensure that it
-#       is a valid move; this will be expanded upon below.
-#
-#       I will have multiple helper functions to convert algebraic notation to its list indices. First will be a
-#       function to convert the alphabetic part of the notation by using a dictionary: "a" will correspond to 0, "b"
-#       will correspond to 1, and so on. The second function will convert the numerical part of the notation: "1" will
-#       correspond to 0, "2" will correspond to 1, and so on. I will have another two functions to convert the indices
-#       back to algebraic notation, using the same method above. The column index would correspond to the alphabetical
-#       part of the notation, while the row index will be the numerical part.
-#
-#       The Soldier class is only able to move forward and horizontally. To do so, I will check for the current position
-#       of the soldier piece and convert it to its index notation. Using an if statement, if the soldier piece is on the
-#       left or right edge, it is only allowed to move to the opposite direction by adding or subtracting 1 from the
-#       column index. Otherwise, it can move left or right by adding or subtracting the column index. Using a different
-#       if statement, I will check for the ownership of the piece using a getter. If it is the red player, it will only
-#       be allowed to move down, while blue will only be allowed to move up by adding 1 to the row index and vice versa
-#       for the blue player. Nested within the if statements above, if the location the piece will move to has another
-#       piece that the current player owns, then it is not a valid movement. If the movements are valid, then it will
-#       convert the indices back into algebraic notation using the helper functions above and add the location as a
-#       valid movement in the set called valid_movements_set.
-#
-#       The Guard class is only able to move one space in any direction in their respective palaces. Implementation will
-#       be similar to the Soldier class.
-#       - First check which player owns the piece.
-#       - Next check for the position of the Guard piece to be moved and convert the algebraic notation to indices.
-#       - Using an if statement, change the indices for the movement limitations based on the player.
-#       - Using list indices, do not allow the pieces to move past the edges of the palace.
-#       - Add or subtract 1 to the row index, column index, or both indices for vertical, horizontal, or diagonal
-#         movement respectively.
-#       - Check the location if there is a piece owned by the player already there.
-#       - If not, then convert the indices back into algebraic notation and add it to the set valid_movements_set.
-#       - Return valid_movements_set
-#
-#       The General class will also inherit from the Guard class, since their movements are the same. Additionally, the
-#       General cannot put itself in check.
-#       - Call the original guard method and save the set received into valid_movements_set.
-#       - Iterate through the game board. If the piece belongs to the opponent, call their valid moves method.
-#       - While in the loop, iterate through the General's valid_movements_set.
-#       - If the location in the General's valid_movements_set is in the opponent's piece's valid moves set, then remove
-#         it from the General's valid_movements_set.
-#       - Return valid_movements_set
-#
-#       The Horse class is allowed to move one space vertical or horizontally, and then one space diagonally forwards.
-#       - First check the position of the Horse piece to be moved and convert the algebraic notation to indices.
-#       - Next add/subtract 1 from the indices and check if there is a piece already in the location adjacent to the
-#         horse piece.
-#       - There are 4 if statements for each direction: up, down, left, right.
-#       - If the location is not None, skip this part of the if statement, since horses are not able to jump over
-#         pieces.
-#       - Otherwise, check for the diagonal movements by manipulating the list indices again.
-#       - There should be another two if statements for each direction: up and to the right, up and to the left, left
-#         and up, left, and down, and so forth.
-#       - If the location is None or contains an enemy piece, then convert the indices to algebraic notation and add it
-#         to the set valid_movements_set.
-#       - Return valid_movements_set
-#
-#       The Elephant class will also inherit from the Horse class, since their movements are the similar. The only
-#       difference is that the Elephant class can also move one extra space diagonally.
-#       - Call the original horse method and save the set received from there into horse_movements_set.
-#       - Iterate through horse_movements_set.
-#       - For each iteration, convert the location to its indices.
-#       - Check the index; if the index is not None, then remove it from the set.
-#       - Find the position of the elephant piece to be moved.
-#       - Add 1 or 2 from the column or row indices to determine which directions to move to match the positions in
-#         horse_movements_set.
-#       - Check the next diagonal by adding/subtracting 1 to the row and column indices.
-#       - If the next diagonal is None or has an enemy piece, then add it to the set valid_movements_set.
-#       - Return valid_movements_set
-#
-#       The Chariot class can move in any the length of the board vertically and horizontally.
-#       - Find the position of the chariot piece to be moved and convert it to indices.
-#       - Starting from the chariot piece, iterate backwards through the column index until we reach a piece or the
-#         edge.
-#       - For each space that is None, add it to the valid_movements_set.
-#       - If the piece is an enemy piece or the edge, add the enemy location or edge as the last valid movement and stop
-#         iterating through that side.
-#       - If the piece is a friendly piece, add the index to one higher/lower than the friendly piece as the last valid
-#         movement on that side and stop iterating.
-#       - Next, iterate forwards through the columns index and do the same thing above.
-#       - Next, iterate through the row indices to go above and below the chariot piece. Do the same thing above.
-#       - If the chariot is in the palace, check the diagonals within the palaces by manipulating the row and column
-#         indices in a similar way to the horse/elephant pieces.
-#       - Return valid_movements_set
-#
-#       The Cannon class can only move if there is a piece it can hop over. It will also inherit from the Chariot class,
-#       since their movements is similar in that they are able to move vertically and horizontally the length of the
-#       board as long. The Cannon class only requires extra functionality to continue iterating past the first piece it
-#       encounters.
-#       - Call the original chariot method and save the set received into chariot_movements_set.
-#       - Iterate through the set and convert the algebraic notation to indices.
-#       - If the location specified is None, then remove it from the set. This gives us the set of all locations with a
-#         piece that the cannon can jump over.
-#       - Check the locations of the pieces in the set to see which direction they are in compared to the cannon.
-#       - Starting from the pieces in the set, iterate away from the cannon until we reach another piece.
-#       - If the piece is an enemy piece or the edge, add the enemy location or edge as the last valid movement and stop
-#         iterating through that side.
-#       - If the piece is a friendly piece, add the index to one higher/lower than the friendly piece as the last valid
-#         movement on that side and stop iterating.
-#       - At most, do this 4 times if there is a piece in all four directions of the cannon.
-#       - Return valid_movements_set
-#
-#      (4), (5), (6), and (7)
-#
-#       With the above, each piece should be able to return a set of valid moves. This set will be used in the method
-#       is_in_check.
-#       - This method will take a player's color as a parameter to check if that player is in check.
-#       - Get the current player's general's location.
-#       - Iterate through the game board and if the piece belongs to the opposite player, call its valid_moves method.
-#       - If the player's general's location is in any of the opponent's pieces valid_movements_set return True.
-#
-#       The player's turns will be kept track of by a truth value. True for blue's turn, False for red's.
-#
-#       In the make_move method:
-#       - This takes two parameters in algebraic notation: the piece_location, and the new_location it will be moved to.
-#       - First call the is_in_check method for the current player.
-#       - If it's true, iterate through the current player's palace indices to search for the general's location.
-#       - Get the general's location.
-#       - If piece_location is not the same as the general's location, then return False.
-#       - If the current player's general is not in check, then call the get_player method to make sure that it is the
-#         current player's piece.
-#       - If it is the current player's piece, then call the valid_moves method for the piece.
-#       - If new_location is not in the valid_movements_set for that piece, return False.
-#       - Otherwise, set the piece's position to new_location.
-#       - Convert new_location to its indices and replace whatever on the game board at the indices location with the
-#         moving piece.
-#       - Lastly, iterate through the opponent's palace.
-#       - When the opponent's general is reached, call its valid_moves method.
-#       - If the opponent's general's valid_movements_set is empty, then the current player wins.
-#       - If the current player wins, change the game state to reflect so.
-#       - Regardless, change the player's turns truth value to its opposite to change turns.
-#       - Return True if the move was successful.
-#
-# -----------------------------DETAILED TEXT DESCRIPTIONS OF HOW TO HANDLE THE SCENARIOS END-----------------------------
+import copy
 
 
 class JanggiGame:
@@ -294,22 +136,29 @@ class JanggiGame:
         finished.
         """
 
-        print("make_move(", piece_location, ",", new_location, ")")
         dummy_piece = JanggiPiece(None, None)  # Used to use the class methods.
         piece_row = dummy_piece.numeric_to_index(piece_location.lower())
         piece_column = dummy_piece.alphabetic_to_index(piece_location.lower())
         new_row = dummy_piece.numeric_to_index(new_location.lower())
         new_column = dummy_piece.alphabetic_to_index(new_location.lower())
         piece_to_be_moved = self._game_board[piece_row][piece_column]
-        location_to_move_to = self._game_board[new_row][new_column]
+        game_board_copy = copy.deepcopy(self._game_board)
+
+        print("make_move(", piece_location, ",", new_location, ")")
+        print(piece_to_be_moved.get_piece_name())
+        print(piece_to_be_moved.get_position())
+        # (piece_to_be_moved.valid_movements(self._game_board))
+        print("")
 
         # Return False if the game is over.
         if self._game_state != "UNFINISHED":
+            print(0)
             return False
 
         # Return False if there is no piece in the location.
         if piece_to_be_moved is None:
             print(1)
+            print(piece_to_be_moved)
             return False
 
         # Return False if it's not the current player's piece.
@@ -351,19 +200,18 @@ class JanggiGame:
         if self._blues_turn:
             if self.is_in_check("blue"):
                 print(5)
-                self._game_board[piece_row][piece_column] = piece_to_be_moved
-                self._game_board[new_row][new_column] = location_to_move_to
+                self._game_board = copy.deepcopy(game_board_copy)
                 return False
 
             if self.is_in_check("red"):
+                print(self.is_checkmated("red"))
                 if self.is_checkmated("red"):
                     self._game_state = "BLUE_WON"
 
         else:
             if self.is_in_check("red"):
                 print(6)
-                self._game_board[piece_row][piece_column] = piece_to_be_moved
-                self._game_board[new_row][new_column] = location_to_move_to
+                self._game_board = copy.deepcopy(game_board_copy)
                 return False
 
             if self.is_in_check("blue"):
@@ -410,6 +258,8 @@ class JanggiGame:
         """
 
         possible_movements_set = set()
+        pieces_set = set()
+        game_board_copy = copy.deepcopy(self._game_board)
 
         # Iterate through the board.
         for row in self._game_board:
@@ -418,33 +268,33 @@ class JanggiGame:
                 # Look for the player's pieces.
                 if column is not None:
                     if column.get_player() == player_color:
+                        pieces_set.add(column)
 
-                        # Test each available movement the player can do. If the move will make the player go out of
-                        # check, add it to the set of possible moves.
-                        for position in column.valid_movements(self._game_board):
+        # Test each available movement the player can do. If the move will make the player go out of
+        # check, add it to the set of possible moves.
+        for piece in pieces_set:
+            for position in piece.valid_movements(self._game_board):
 
-                            piece_row = column.numeric_to_index(column.get_position())
-                            piece_column = column.alphabetic_to_index(column.get_position())
-                            new_row = column.numeric_to_index(position)
-                            new_column = column.alphabetic_to_index(position)
+                # Reset the board back to normal.
+                self._game_board = copy.deepcopy(game_board_copy)
 
-                            # Used to restore the board back to normal.
-                            save_piece = column
-                            save_location_contents = self._game_board[new_row][new_column]
+                piece_row = piece.numeric_to_index(piece.get_position())
+                piece_column = piece.alphabetic_to_index(piece.get_position())
+                new_row = piece.numeric_to_index(position)
+                new_column = piece.alphabetic_to_index(position)
 
-                            self._game_board[new_row][new_column] = column
-                            self._game_board[piece_row][piece_column] = None
-                            column.set_position(position)
+                self._game_board[new_row][new_column] = piece
+                self._game_board[piece_row][piece_column] = None
+                piece.set_position(position)
 
-                            if not self.is_in_check(player_color):
-                                possible_movements_set.update(position)
+                if not self.is_in_check(player_color):
+                    possible_movements_set.add(position)
 
-                            # Reset the board back to normal.
-                            self._game_board[piece_row][piece_column] = save_piece
-                            self._game_board[new_row][new_column] = save_location_contents
+        self._game_board = copy.deepcopy(game_board_copy)
 
         # If the player has no available moves, the player is checkmated.
-        if possible_movements_set is set():
+        print(possible_movements_set)
+        if possible_movements_set == set():
             return True
 
         return False
