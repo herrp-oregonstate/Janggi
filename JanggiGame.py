@@ -144,7 +144,6 @@ class JanggiGame:
         piece_to_be_moved = self._game_board[piece_row][piece_column]
         game_board_copy = copy.deepcopy(self._game_board)
 
-
         # Return False if the game is over.
         if self._game_state != "UNFINISHED":
             return False
