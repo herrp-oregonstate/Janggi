@@ -188,6 +188,7 @@ class JanggiGame:
         if self._blues_turn:
             if self.is_in_check("blue"):
                 self._game_board = copy.deepcopy(game_board_copy)
+
                 return False
 
             if self.is_in_check("red"):
@@ -197,6 +198,7 @@ class JanggiGame:
         else:
             if self.is_in_check("red"):
                 self._game_board = copy.deepcopy(game_board_copy)
+
                 return False
 
             if self.is_in_check("blue"):
@@ -1025,8 +1027,7 @@ class Cannon(Chariot):
 
             # Unable to jump over other cannons
             if game_board[self.numeric_to_index(position)][self.alphabetic_to_index(position)] is not None:
-                if game_board[self.numeric_to_index(position)][
-                    self.alphabetic_to_index(position)].get_piece_name() == self.get_piece_name():
+                if game_board[self.numeric_to_index(position)][self.alphabetic_to_index(position)].get_piece_name() == "cannon":
                     piece_location_set.remove(position)
 
         # Create a temporary piece in each location and get its vertical and horizontal movements.
@@ -1060,6 +1061,12 @@ class Cannon(Chariot):
                 if game_board[self.numeric_to_index(position)][
                     self.alphabetic_to_index(position)].get_player() == self.get_player():
                     valid_movements_set.remove(position)
+
+                # Cannot capture enemy cannons.
+                else:
+                    if game_board[self.numeric_to_index(position)][
+                    self.alphabetic_to_index(position)].get_piece_name() == "cannon":
+                        valid_movements_set.remove(position)
 
         # Diagonal movements available when inside a palace.
         # If the piece is in the corners of the red palace.
