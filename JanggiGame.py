@@ -231,19 +231,9 @@ class JanggiGame:
              Guard("red", "d1"), None, Guard("red", "f1"),
              Elephant("red", "g1"), Horse("red", "h1"), Chariot("red", "i1")],
 
-            # # No guards
-            # [Chariot("red", "a1"), Elephant("red", "b1"), Horse("red", "c1"),
-            #  None, None, None,
-            #  Elephant("red", "g1"), Horse("red", "h1"), Chariot("red", "i1")],
-
             [None, None, None,
              None, General("red", "e2"), None,
              None, None, None],
-
-            # # No general
-            # [None, None, None,
-            #  None, None, None,
-            #  None, None, None],
 
             [None, Cannon("red", "b3"), None,
              None, None, None,
@@ -273,65 +263,10 @@ class JanggiGame:
              None, General("blue", "e9"), None,
              None, None, None],
 
-            # # No general
-            # [None, None, None,
-            #  None, None, None,
-            #  None, None, None],
-
             [Chariot("blue", "a10"), Elephant("blue", "b10"), Horse("blue", "c10"),
              Guard("blue", "d10"), None, Guard("blue", "f10"),
              Elephant("blue", "g10"), Horse("blue", "h10"), Chariot("blue", "i10")]
-
-            # # No guards
-            # [Chariot("blue", "a10"), Elephant("blue", "b10"), Horse("blue", "c10"),
-            #  None, None, None,
-            #  Elephant("blue", "g10"), Horse("blue", "h10"), Chariot("blue", "i10")]
         ]
-
-        self._remaining_blue_pieces = []
-        self._remaining_red_pieces = []
-
-        # self._dict_game_board = {
-        #     "a1": Chariot("red", "a1"), "b1": Elephant("red", "b1"), "c1": Horse("red", "c1"),
-        #     "d1": Guard("red", "d1"), "e1": None, "f1": Guard("red", "f1"),
-        #     "g1": Elephant("red", "g1"), "h1": Horse("red", "h1"), "i1": Chariot("red", "i1"),
-        #
-        #     "a2": None, "b2": None, "c2": None,
-        #     "d2": None, "e2": General("red", "e2"), "f2": None,
-        #     "g2": None, "h2": None, "i2": None,
-        #
-        #     "a3": None, "b3": Cannon("red", "b3"), "c3": None,
-        #     "d3": None, "e3": None, "f3": None,
-        #     "g3": None, "h3": Cannon("red", "h3"), "i3": None,
-        #
-        #     "a4": Soldier("red", "a4"), "b4": None, "c4": Soldier("red", "c4"),
-        #     "d4": None, "e4": Soldier("red", "e4"), "f4": None,
-        #     "g4": Soldier("red", "g4"), "h4": None, "i4": Soldier("red", "i4"),
-        #
-        #     "a5": None, "b5": None, "c5": None,
-        #     "d5": None, "e5": None, "f5": None,
-        #     "g5": None, "h5": None, "i5": None,
-        #
-        #     "a6": None, "b6": None, "c6": None,
-        #     "d6": None, "e6": None, "f6": None,
-        #     "g6": None, "h6": None, "i6": None,
-        #
-        #     "a7": Soldier("blue", "a7"), "b7": None, "c7": Soldier("blue", "c7"),
-        #     "d7": None, "e7": Soldier("blue", "e7"), "f7": None,
-        #     "g7": Soldier("blue", "g7"), "h7": None, "i7": Soldier("blue", "i7"),
-        #
-        #     "a8": None, "b8": Cannon("blue", "b8"), "c8": None,
-        #     "d8": None, "e8": None, "f8": None,
-        #     "g8": None, "h8": Cannon("blue", "h8"), "i8": None,
-        #
-        #     "a9": None, "b9": None, "c9": None,
-        #     "d9": None, "e9": General("blue", "e9"), "f9": None,
-        #     "g9": None, "h9": None, "i9": None,
-        #
-        #     "a10": Chariot("blue", "a10"), "b10": Elephant("blue", "b10"), "c10": Horse("blue", "c10"),
-        #     "d10": Guard("blue", "d10"), "e10": None, "f10": Guard("blue", "f10"),
-        #     "g10": Elephant("blue", "g10"), "h10": Horse("blue", "h10"), "i10": Chariot("blue", "i10")
-        # }
 
     def get_game_board(self):
         """
@@ -359,14 +294,18 @@ class JanggiGame:
         finished.
         """
 
-        print("Attempting: ", piece_location, "->", new_location)
-        dummy_piece = JanggiPiece(None, None)       # Used to use the class methods.
-        piece_row = dummy_piece.numeric_to_index(piece_location)
-        piece_column = dummy_piece.alphabetic_to_index(piece_location)
-        new_row = dummy_piece.numeric_to_index(new_location)
-        new_column = dummy_piece.alphabetic_to_index(new_location)
+        print("make_move(", piece_location, ",", new_location, ")")
+        dummy_piece = JanggiPiece(None, None)  # Used to use the class methods.
+        piece_row = dummy_piece.numeric_to_index(piece_location.lower())
+        piece_column = dummy_piece.alphabetic_to_index(piece_location.lower())
+        new_row = dummy_piece.numeric_to_index(new_location.lower())
+        new_column = dummy_piece.alphabetic_to_index(new_location.lower())
         piece_to_be_moved = self._game_board[piece_row][piece_column]
         location_to_move_to = self._game_board[new_row][new_column]
+
+        # Return False if the game is over.
+        if self._game_state != "UNFINISHED":
+            return False
 
         # Return False if there is no piece in the location.
         if piece_to_be_moved is None:
@@ -384,7 +323,7 @@ class JanggiGame:
                 print(3)
                 return False
 
-        # The user passes their turn only available if they're not in check.
+        # The user passing their turn only available if they're not in check.
         if self._blues_turn:
             if not self.is_in_check("blue"):
                 if piece_location == new_location:
@@ -405,9 +344,8 @@ class JanggiGame:
         # Move the piece into the new position, and remove the piece from the old position. Update its position.
         self._game_board[new_row][new_column] = piece_to_be_moved
         self._game_board[piece_row][piece_column] = None
-        self._game_board[new_row][new_column].set_position(piece_to_be_moved.indices_to_algebraic_notation(new_column, new_row))
-
-        print(self._game_board[new_row][new_column])
+        self._game_board[new_row][new_column].set_position(
+            piece_to_be_moved.indices_to_algebraic_notation(new_column, new_row))
 
         # Return False if the move will make the player be in check. Reset the board back to its previous state if so.
         if self._blues_turn:
@@ -416,12 +354,21 @@ class JanggiGame:
                 self._game_board[piece_row][piece_column] = piece_to_be_moved
                 self._game_board[new_row][new_column] = location_to_move_to
                 return False
+
+            if self.is_in_check("red"):
+                if self.is_checkmated("red"):
+                    self._game_state = "BLUE_WON"
+
         else:
             if self.is_in_check("red"):
                 print(6)
                 self._game_board[piece_row][piece_column] = piece_to_be_moved
                 self._game_board[new_row][new_column] = location_to_move_to
                 return False
+
+            if self.is_in_check("blue"):
+                if self.is_checkmated("blue"):
+                    self._game_state = "RED_WON"
 
         self._blues_turn = not self._blues_turn
 
@@ -450,6 +397,54 @@ class JanggiGame:
                             general_location = column.get_position()
 
         if general_location in opponent_movements_set:
+            return True
+
+        return False
+
+    def is_checkmated(self, player_color):
+        """
+        Checks for all possible moves for the player's pieces. The player is checkmated if they have no possible moves
+        to get them out of check.
+
+        Returns True if the player is checkmated.
+        """
+
+        possible_movements_set = set()
+
+        # Iterate through the board.
+        for row in self._game_board:
+            for column in row:
+
+                # Look for the player's pieces.
+                if column is not None:
+                    if column.get_player() == player_color:
+
+                        # Test each available movement the player can do. If the move will make the player go out of
+                        # check, add it to the set of possible moves.
+                        for position in column.valid_movements(self._game_board):
+
+                            piece_row = column.numeric_to_index(column.get_position())
+                            piece_column = column.alphabetic_to_index(column.get_position())
+                            new_row = column.numeric_to_index(position)
+                            new_column = column.alphabetic_to_index(position)
+
+                            # Used to restore the board back to normal.
+                            save_piece = column
+                            save_location_contents = self._game_board[new_row][new_column]
+
+                            self._game_board[new_row][new_column] = column
+                            self._game_board[piece_row][piece_column] = None
+                            column.set_position(position)
+
+                            if not self.is_in_check(player_color):
+                                possible_movements_set.update(position)
+
+                            # Reset the board back to normal.
+                            self._game_board[piece_row][piece_column] = save_piece
+                            self._game_board[new_row][new_column] = save_location_contents
+
+        # If the player has no available moves, the player is checkmated.
+        if possible_movements_set is set():
             return True
 
         return False
@@ -1018,7 +1013,8 @@ class Elephant(Horse):
 
             else:
                 for hv_position in hv_movements_set:
-                    if self.numeric_to_index(hv_position) == self.numeric_to_index(position) or self.alphabetic_to_index(hv_position) == self.alphabetic_to_index(position):
+                    if self.numeric_to_index(hv_position) == self.numeric_to_index(
+                            position) or self.alphabetic_to_index(hv_position) == self.alphabetic_to_index(position):
                         valid_movements_set.remove(position)
 
         return valid_movements_set
@@ -1112,7 +1108,8 @@ class Chariot(JanggiPiece):
         # Look for positions with a piece in it. If it is the player's piece, remove it from the set.
         for position in valid_movements_set.copy():
             if game_board[self.numeric_to_index(position)][self.alphabetic_to_index(position)] is not None:
-                if game_board[self.numeric_to_index(position)][self.alphabetic_to_index(position)].get_player() == self.get_player():
+                if game_board[self.numeric_to_index(position)][
+                    self.alphabetic_to_index(position)].get_player() == self.get_player():
                     valid_movements_set.remove(position)
 
         # Diagonal movements available when inside a palace.
@@ -1194,7 +1191,8 @@ class Cannon(Chariot):
 
             # Unable to jump over other cannons
             if game_board[self.numeric_to_index(position)][self.alphabetic_to_index(position)] is not None:
-                if game_board[self.numeric_to_index(position)][self.alphabetic_to_index(position)].get_piece_name() == self.get_piece_name():
+                if game_board[self.numeric_to_index(position)][
+                    self.alphabetic_to_index(position)].get_piece_name() == self.get_piece_name():
                     piece_location_set.remove(position)
 
         # Create a temporary piece in each location and get its vertical and horizontal movements.
@@ -1225,7 +1223,8 @@ class Cannon(Chariot):
         # Cannot capture your own pieces.
         for position in valid_movements_set.copy():
             if game_board[self.numeric_to_index(position)][self.alphabetic_to_index(position)] is not None:
-                if game_board[self.numeric_to_index(position)][self.alphabetic_to_index(position)].get_player() == self.get_player():
+                if game_board[self.numeric_to_index(position)][
+                    self.alphabetic_to_index(position)].get_player() == self.get_player():
                     valid_movements_set.remove(position)
 
         # Diagonal movements available when inside a palace.
