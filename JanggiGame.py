@@ -144,32 +144,22 @@ class JanggiGame:
         piece_to_be_moved = self._game_board[piece_row][piece_column]
         game_board_copy = copy.deepcopy(self._game_board)
 
-        print("make_move(", piece_location, ",", new_location, ")")
-        print(piece_to_be_moved.get_piece_name())
-        print(piece_to_be_moved.get_position())
-        # (piece_to_be_moved.valid_movements(self._game_board))
-        print("")
 
         # Return False if the game is over.
         if self._game_state != "UNFINISHED":
-            print(0)
             return False
 
         # Return False if there is no piece in the location.
         if piece_to_be_moved is None:
-            print(1)
-            print(piece_to_be_moved)
             return False
 
         # Return False if it's not the current player's piece.
         if self._blues_turn:
             if piece_to_be_moved.get_player() != "blue":
-                print(2)
                 return False
 
         if not self._blues_turn:
             if piece_to_be_moved.get_player() != "red":
-                print(3)
                 return False
 
         # The user passing their turn only available if they're not in check.
@@ -187,7 +177,6 @@ class JanggiGame:
 
         # Return False if the movement is invalid.
         if new_location not in piece_to_be_moved.valid_movements(self._game_board):
-            print(4)
             return False
 
         # Move the piece into the new position, and remove the piece from the old position. Update its position.
@@ -199,18 +188,15 @@ class JanggiGame:
         # Return False if the move will make the player be in check. Reset the board back to its previous state if so.
         if self._blues_turn:
             if self.is_in_check("blue"):
-                print(5)
                 self._game_board = copy.deepcopy(game_board_copy)
                 return False
 
             if self.is_in_check("red"):
-                print(self.is_checkmated("red"))
                 if self.is_checkmated("red"):
                     self._game_state = "BLUE_WON"
 
         else:
             if self.is_in_check("red"):
-                print(6)
                 self._game_board = copy.deepcopy(game_board_copy)
                 return False
 
@@ -293,7 +279,6 @@ class JanggiGame:
         self._game_board = copy.deepcopy(game_board_copy)
 
         # If the player has no available moves, the player is checkmated.
-        print(possible_movements_set)
         if possible_movements_set == set():
             return True
 
